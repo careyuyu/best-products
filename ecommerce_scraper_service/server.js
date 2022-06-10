@@ -1,17 +1,23 @@
 var express = require('express');
 var app = express();
-var spiders = require('./spiders');
+const product_service = require('./services/product-service')
+
 
 
 const hostname = 'localhost';
 const port = process.env.PORT || 8000;
 
-app.get('/amazon/:product', async function(req, res) {
-    result = await spiders.parseAmazon(req.params["product"]);
-    //result2 = await spiders.parseEbay(req.params["product"]);
-    console.log("********************************log result from controller********************************")
-    console.log(result)
+app.get("/product_search/:product_name", async function(req, res) {
+    result = await product_service.getAmazonProducts(req.params["product_name"])
     res.send(result)
-});
+})
+
+app.get("/comment_search/:website/:page_url", async function(req, res) {
+    result = []
+    if(req.params["website"]=="amazon") {
+        result = await product_service.getAmazonComments(req.params["page_url"])
+    }
+    res.send(result)
+})
 
 app.listen(port);

@@ -11,8 +11,11 @@
   "dependencies": {
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.11",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "pm2": "^5.2.0",
-    "request": "^2.88.2"
+    "redis": "^4.1.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
   }
 }
