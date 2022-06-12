@@ -36,7 +36,7 @@ async function getAmazonProducts(product_name) {
         var items = $('div.s-card-container.s-overflow-hidden.aok-relative.s-include-content-margin.s-latency-cf-section.s-card-border')
         result = []
         items.each((i, element)=>{
-            const title = $(element).find('span.a-size-base-plus.a-color-base.a-text-normal').text()
+            const title = $(element).find('span.a-size-base-plus.a-color-base.a-text-normal, .a-size-medium.a-color-base.a-text-normal').text()
             const price = $(element).find('span.a-offscreen').first().text()
             var popularity_info = $($(element).find('div.a-row.a-size-small')[0]).children()
             const stars = $(popularity_info[0]).attr("aria-label")
