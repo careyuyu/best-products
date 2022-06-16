@@ -1,6 +1,7 @@
 .popper_window {
     width: 450px;
     height: 210px;
+    z-index: 100;
 }
 
 .popper_window_card {

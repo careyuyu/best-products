@@ -9,7 +9,21 @@
     color:#f18e01
 }
 
+.gray {
+    color: rgb(177, 177, 177)
+}
+
 .link-unstyled{
     color: inherit;
     text-decoration: inherit;
   }
+
+.widthmax{
+    width: 100%;
+}
+
+.website_img{
+    width: 50px;
+    height: 36px;
+    object-fit: scale-down;
+}

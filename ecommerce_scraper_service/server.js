@@ -6,23 +6,41 @@ const product_service = require('./services/product-service')
 
 
 
-const hostname = 'localhost';
 const port = process.env.PORT || 8000;
 
+//controller for getting product list
 app.get("/product_search/:product_name", async function(req, res) {
     console.log("got product_search request on: "+req.params["product_name"])
+    const productName = req.params["product_name"].toLowerCase()
+    Promise.all([product_service.getAmazonProducts(productName), 
+                product_service.getEbayProducts(productName)]).then((values)=>{
+                    res.send(values.flat());
+    });
+});
 
-    result = await product_service.getAmazonProducts(req.params["product_name"])
-    res.send(result)
-})
-
+//controller for getting comments
 app.get("/comment_search/:website/:page_url", async function(req, res) {
     console.log("got comment_search request on:"+req.params["page_url"])
+    const website = req.params["website"]
+    const url = req.params["page_url"]
     result = []
-    if(req.params["website"]=="Amazon") {
-        result = await product_service.getAmazonComments(req.params["page_url"])
+    if(website==="Amazon") {
+        result = await product_service.getAmazonComments(url)
+    }
+    else if(website==="ebay") {
+        result = await product_service.getEbayComments(url)
     }
     res.send(result)
-})
+});
 
+//routes for testing
+app.get("/test_ebay/:url", async function(req, res) {
+    result = await product_service.getEbayProducts(req.params["url"])
+    res.send(result)
+});
+
+app.get("/test_ama/:url", async function(req, res) {
+    result = await product_service.getAmazonProducts(req.params["url"])
+    res.send(result)
+});
 app.listen(port);
