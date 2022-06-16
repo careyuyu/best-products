@@ -13,7 +13,7 @@ class ProductList extends Component {
             <Fragment>
                 <div className="container mt-5 mb-5">
                     <div className="d-flex justify-content-center row">
-                        <div className="col-md-10">
+                        <div className="col-md-12" style={{"max-width":"1000px"}}>
                                 {this.props.products.map((value, index)=>(
                                     <ProductItem key={index} product={value}></ProductItem>
                                 )
