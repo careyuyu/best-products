@@ -39,7 +39,7 @@ async function getAmazonProducts(product_name) {
             const price_list = $(element).find('span.a-offscreen')
             const price = $(price_list[0]).text()
             const prev_price = $(price_list[1]).text()
-            var discount = $(element).find('span.a-size-extra-large.s-color-discount.s-light-weight-text').text()
+            var discount = $(element).find('span.a-size-extra-large.s-color-discount.s-light-weight-text').first().text()
             discount = discount.substring(1, 100)
             var popularity_info = $($(element).find('div.a-row.a-size-small')[0]).children()
             const stars = $(popularity_info[0]).attr("aria-label")

@@ -31,11 +31,11 @@ class ProductItem extends Component {
                         <span> &nbsp;{this.props.product.reviews || "no"} reviews</span>
                     </div>
                     <div className="d-flex flex-row px-2">
-                         {<CommentPopper comments={this.state.comments} getComments={this.getComments}/>}
+                         {<CommentPopper comments={this.state.comments} getComments={this.getComments} loadingComments={this.state.loadingComments}/>}
                     </div>
                 </div>
                 <div className="flex-col align-items-start align-content-center col-md-3 mt-1 position-relative"
-                style={{"border-left":"1px solid rgb(200, 200, 200)", "height":"200px"}}>
+                style={{"borderLeft":"1px solid rgb(200, 200, 200)", "height":"200px"}}>
                     <div className="d-flex flex-row justify-content-between">
                         <h4>{this.renderPrice()}</h4>
                         {this.renderDiscount()}
@@ -45,7 +45,7 @@ class ProductItem extends Component {
                     </div>
                     <div className="d-flex flex-column mt-auto fixed-bottom position-absolute bottom-0 px-3"
                     style={{zIndex:0}}>
-                        <button className="btn btn-primary btn-sm widthmax" type="button">Details</button>
+                        <a href={this.props.product.link} target="_blank"><button className="btn btn-primary btn-sm widthmax" type="button">Details</button></a>
                         <button className="btn btn-outline-primary btn-sm mt-2" type="button">Add to wishlist</button>
 
                         <div className="d-flex flex-row mb-0">
@@ -115,17 +115,13 @@ class ProductItem extends Component {
 
     //get the comment info of a product
     getComments =()=> {
-        if (!this.state.loadingComments) {
+        if (this.state.comments.length===0 && !this.state.loadingComments) {
             this.setState({loadingComments:true})
             const url = encodeURIComponent(this.props.product.link)
             axios.get("http://localhost:8000/comment_search/"+this.props.product.website+"/"+url).then(res=>{
                 const comments = res.data
-                this.setState({comments})
-                console.log("finish loading comments")
+                this.setState({comments, loadingComments:false})
             })
-        }
-        else {
-            console.log(this.state.comments)
         }
     }
 }

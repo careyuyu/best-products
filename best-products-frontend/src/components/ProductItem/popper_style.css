@@ -8,3 +8,11 @@
     width: 400px;
     height: 180px;
 }
+
+.loading_window {
+    width: 400px; /* Can be in percentage also. */
+    height: 100%;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+}

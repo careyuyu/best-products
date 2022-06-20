@@ -1,6 +1,5 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Popper from '@mui/material/Popper';
+import {Box, Popper, CircularProgress} from '@mui/material';
 import { FixedSizeList } from 'react-window';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'
@@ -16,9 +15,7 @@ class CommentPopper extends React.Component {
 
     render() {
         const handleClick = (event) => {
-            console.log(this.props.url)
             this.props.getComments()
-            console.log(this.props.comments)
             const anchorEl = this.state.anchorEl ? null : event.currentTarget
           this.setState({anchorEl});
         };
@@ -30,11 +27,40 @@ class CommentPopper extends React.Component {
             <button aria-describedby={id} className="btn btn-primary btn-sm mt-2" type="button" onClick={handleClick}>
               Top reviews
             </button>
-            <Popper id={id} open={open} anchorEl={this.state.anchorEl} placement="right">
+            <Popper id={id} open={open} anchorEl={this.state.anchorEl} placement="right" disablePortal={false}
+                modifiers={[
+                    {
+                    name: 'flip',
+                    enabled: true,
+                    options: {
+                        altBoundary: true,
+                        rootBoundary: 'document',
+                        padding: 8,
+                    },
+                    },
+                    {
+                    name: 'preventOverflow',
+                    enabled: false,
+                    options: {
+                        altAxis: true,
+                        altBoundary: true,
+                        tether: true,
+                        rootBoundary: 'document',
+                        padding: 8,
+                    },
+                    },
+                ]}>
               <Box sx={{ border: 1, borderColor: 'grey.400', borderRadius: 1, p: 1, bgcolor: 'background.paper', width: '100%', height: 220, maxWidth: 500, boxShadow: 3}}>
                  <div className="container popper_window overflow-auto">
-                    {this.props.comments.map((comment)=>(
-                        <div className="card">
+                    {this.props.loadingComments && 
+                    <div className="mb-4 loading_window d-flex align-items-center justify-content-center">
+                        <div className="d-flex justify-content-center">
+                            Loading Comments
+                            <CircularProgress></CircularProgress>
+                        </div>
+                    </div>}
+                    {this.props.comments.map((comment, index)=>(
+                        <div key={comment.title+index} className="card">
                             <div className="card-body popper_window_card overflow-auto my-2 py-0">
                                 <h6 className="card-title pt-0"><small><b>{comment.title}</b></small></h6>
                                 <div className="d-flex flex-row align-items-center">
