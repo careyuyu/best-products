@@ -7,6 +7,7 @@ import './style.css'
 import CommentPopper from './comment_popper'
 import ebayPic from './images/ebay.png'
 import amazonPic from './images/amazon.png'
+import {Button} from '@mui/material';
 
 class ProductItem extends Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class ProductItem extends Component {
     }
     render() {
         return(
-            <div className="row p-2 bg-white border rounded mt-2 item_container shadow-sm">
+            <div className="row p-2 mt-4 item_container item_card_border">
                 <div className="col-md-3 mt-1"><img className="rounded product_img" src={this.props.product.img_url} alt="not available"></img></div>
                 <div className="col-md-6 mt-1 d-flex align-items-start flex-column bd-highlight mb-3">
                     <div className="mb-auto p-2 bd-highlight">
@@ -35,7 +36,7 @@ class ProductItem extends Component {
                     </div>
                 </div>
                 <div className="flex-col align-items-start align-content-center col-md-3 mt-1 position-relative"
-                style={{"borderLeft":"1px solid rgb(200, 200, 200)", "height":"200px"}}>
+                style={{"borderLeft":"1px solid rgb(200, 200, 200)"}}>
                     <div className="d-flex flex-row justify-content-between">
                         <h4>{this.renderPrice()}</h4>
                         {this.renderDiscount()}
@@ -45,8 +46,8 @@ class ProductItem extends Component {
                     </div>
                     <div className="d-flex flex-column mt-auto fixed-bottom position-absolute bottom-0 px-3"
                     style={{zIndex:0}}>
-                        <a href={this.props.product.link} target="_blank"><button className="btn btn-primary btn-sm widthmax" type="button">Details</button></a>
-                        <button className="btn btn-outline-primary btn-sm mt-2" type="button">Add to wishlist</button>
+                        <a href={this.props.product.link} target="_blank" className='link-unstyled'><Button variant="contained" className="" type="button" sx={{width:"100%"}}>Details</Button></a>
+                        <Button variant="contained" sx={{marginTop:"3px"}} type="button">Add to wishlist</Button>
 
                         <div className="d-flex flex-row mb-0">
                             <p className="m-0">From:{this.renderWebsite()}</p>

@@ -5,9 +5,38 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color:black;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+
+div#root {
+  background-color:#fcecff;
+  min-height: 100vh
+}
+
+.neonText {
+  color: #32fae2;
+  text-shadow:
+    /* White glow */
+    0 0 7px rgb(85, 165, 189),
+    0 0 10px rgb(90, 161, 194),
+    0 0 21px rgb(119, 171, 204),
+    /* Green glow */
+
+    0 0 151px #32fae2;
+}
+
+.neonText-purple {
+  color: #9812d6;
+  text-shadow:
+    /* White glow */
+    0 0 1px rgb(177, 85, 189),
+    /* Green glow */
+
+    0 0 2px #bb32fa;
 }

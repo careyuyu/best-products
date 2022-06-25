@@ -43,6 +43,9 @@ async function getEbayProducts(product_name) {
             //console.log(title)
             result.push({title, price, stars, reviews, link, img_url, prev_price, discount, "website":"ebay"})
         })
+    }).catch((err)=>{
+        console.log(err)
+        result = []
     })
 
     console.log("finished ebay request on "+product_name)
@@ -71,10 +74,10 @@ async function getEbayProducts(product_name) {
             const author = $(element).find("a.review-item-author").text()
             result.push({title, detail, stars, author})
         })
-    }).catch((err) => {
+    }).catch((err)=>{
         console.log(err)
-        return err;
-     })
+        result = []
+    })
     return result
 }
 

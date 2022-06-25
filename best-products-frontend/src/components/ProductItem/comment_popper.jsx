@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Box, Popper, CircularProgress} from '@mui/material';
+import {Box, Popper, CircularProgress, Button} from '@mui/material';
 import { FixedSizeList } from 'react-window';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css'
@@ -24,9 +24,9 @@ class CommentPopper extends React.Component {
         const id = open ? 'comment-popper' : undefined;
         return (    
         <div>
-            <button aria-describedby={id} className="btn btn-primary btn-sm mt-2" type="button" onClick={handleClick}>
+            <Button aria-describedby={id} variant="contained" size="small" type="button" onClick={handleClick}>
               Top reviews
-            </button>
+            </Button>
             <Popper id={id} open={open} anchorEl={this.state.anchorEl} placement="right" disablePortal={false}
                 modifiers={[
                     {

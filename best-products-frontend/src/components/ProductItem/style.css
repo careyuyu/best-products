@@ -27,3 +27,15 @@
     height: 36px;
     object-fit: scale-down;
 }
+
+.item_card_border {
+    background-color: white;
+    border: 0.2rem solid #fff;
+  border-radius: 0.25rem;
+  padding: 0.4em;
+  box-shadow: 0 0 .02rem #fff,
+              0 0 .02rem #fff,
+
+              0 0 0.4rem #bc13fe,
+              0 0 0.6rem #bc13fe;
+}

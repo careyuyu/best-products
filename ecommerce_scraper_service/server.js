@@ -43,4 +43,9 @@ app.get("/test_ama/:url", async function(req, res) {
     result = await product_service.getAmazonProducts(req.params["url"])
     res.send(result)
 });
+
+app.get("/test_deal", async function(req, res) {
+    result = await product_service.getDeals()
+    res.send(result)
+});
 app.listen(port);

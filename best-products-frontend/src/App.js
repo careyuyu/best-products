@@ -2,8 +2,12 @@ import React, { Component, Fragment } from 'react';
 import ProductList from './components/ProductList/product_list';
 import SearchForm from './components/SearchForm/search_form';
 import ReviewRadiogroup from './components/FilterComponents/ReviewRadioGroup/review_radiogroup';
+import NavBar from './components/Navbar/navbar'
 import { TextField, Checkbox, FormControlLabel } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import theme from './style'
+
 import axios from 'axios'
 
 
@@ -42,11 +46,14 @@ class App extends Component {
   render() {
     return (
       <Fragment>
-        <SearchForm getSearchResult={this.getSearchResult}/>
-        {this.renderFilterDiv()}
-        <ProductList products={this.state.products_filtered} loadingData={this.state.loading_data}
-        handleSortChange={this.handleSortChange} selectedOption={this.state.selectedSortOption} 
-        sortOptions={sortOptions} product_full={this.state.products_full}/>
+        <ThemeProvider theme={theme}>
+            <NavBar></NavBar>
+            <SearchForm getSearchResult={this.getSearchResult}/>
+            {this.renderFilterDiv()}
+            <ProductList products={this.state.products_filtered} loadingData={this.state.loading_data}
+            handleSortChange={this.handleSortChange} selectedOption={this.state.selectedSortOption} 
+            sortOptions={sortOptions} product_full={this.state.products_full}/>
+        </ThemeProvider>
       </Fragment>
     )
   }

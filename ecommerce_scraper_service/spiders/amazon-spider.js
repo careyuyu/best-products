@@ -51,7 +51,7 @@ async function getAmazonProducts(product_name) {
         })
     }).catch((err) => {
         console.log(err)
-        return err;
+        result = []
     })
 
     console.log("finished amazon request on "+product_name)
@@ -78,10 +78,34 @@ async function getAmazonProducts(product_name) {
         })
     }).catch((err) => {
         console.log(err)
-        return err;
+        result = []
      })
      console.log("finished amazon comment request")
     return result
 }
 
-module.exports = {getAmazonProducts, getAmazonComments}
+/**
+ * scrap "Today's Deal" page of Amazon.com
+ * @return the scraped products on today's deal page
+ */async function getAmazonDeals() {
+    const url = getProxyUrl("https://www.amazon.com/gp/goldbox/")
+    //get the detail page of the product
+    var result = []
+    await axios.get(url).then((res)=>{
+        let $ = cheerio.load(res.data);
+        var products = $("div[aria-label='Deals grid']")
+        console.log(products)
+        // products.each((i,element)=>{
+        //     console.log(i)
+        //     const title = $(element).find("div.DealContent-module__truncate_sWbxETx42ZPStTc9jwySW").text()
+        //     console.log(title)
+        // })
+    }).catch((err) => {
+        console.log(err)
+        result = []
+     })
+     console.log("finished scraped amazon deal page")
+    return result
+}
+
+module.exports = {getAmazonProducts, getAmazonComments, getAmazonDeals}

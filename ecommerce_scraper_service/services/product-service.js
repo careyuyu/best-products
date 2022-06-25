@@ -6,6 +6,18 @@ const EbayParser = require('../spiders/ebay-spider')
 const redis_client = redis.createClient({port:6379, host:'redis'})
 redis_client.connect()
 
+
+async function getDeals() {
+    result = await redis_client.GET("todays_deal")
+    if (result) {
+        return JSON.parse(result);
+    }
+    else {
+        result = await AmazonParser.getAmazonDeals();
+        return result;
+    }
+}
+
 //get the product search result page data
 async function getAmazonProducts(product_name) {
     //check if the search result is in redis
@@ -20,7 +32,8 @@ async function getAmazonProducts(product_name) {
             result = JSON.stringify(result)
             redis_client.SET("amazon_"+product_name, result)
         }
-        return JSON.parse(result);
+        try{return JSON.parse(result)} 
+        catch (e) {return []}
     }
 }
 
@@ -36,7 +49,8 @@ async function getEbayProducts(product_name) {
             result = JSON.stringify(result)
             redis_client.SET("ebay_"+product_name, result, "EX", 5)
         }
-        return JSON.parse(result);
+        try{return JSON.parse(result)} 
+        catch (e) {return []}
     }
 }
 
@@ -51,7 +65,8 @@ async function getAmazonComments(page_url) {
         result = await AmazonParser.getAmazonComments(page_url)
         result = JSON.stringify(result)
         redis_client.HSET("Amazon_Comments", page_url, result)
-        return result;
+        try{return JSON.parse(result)} 
+        catch (e) {return []}
     }
 }
 
@@ -59,7 +74,8 @@ async function getAmazonComments(page_url) {
 async function getEbayComments(url) {
     result = await EbayParser.getEbayComments(url)
     result = JSON.stringify(result)
-    return JSON.parse(result)
+    try{return JSON.parse(result)} 
+    catch (e) {return []}
 }
 
-module.exports = {getAmazonProducts, getAmazonComments, getEbayProducts, getEbayComments}
+module.exports = {getAmazonProducts, getAmazonComments, getEbayProducts, getEbayComments, getDeals}
