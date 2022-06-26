@@ -1,6 +1,7 @@
 var axios = require('axios');
 var cheerio = require('cheerio');
 require('dotenv').config()
+const puppeteer = require('puppeteer')
 
 const PARSE_URLS = "https://www.ebay.com/sch/i.html?_nkw="
 
@@ -81,5 +82,33 @@ async function getEbayProducts(product_name) {
     return result
 }
 
+/**
+ * scrap "Daily Deal" page of Ebay.com using puppeteer and cheerio
+ * @return the scraped products on today's deal page
+ */async function getEbayDeals() {
+    const url = "https://www.ebay.com/deals"
+    //get the detail page of the product
+    var result = []
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
+    await page.waitForTimeout(1000);
+    const res = await page.content();
+    const $ = cheerio.load(res);
+    var products = $("div.ebayui-dne-item-featured-card.ebayui-dne-item-featured-card div.row div.col")
+    products.each((i,element)=>{
+        const detail = $(element).find('div.dne-itemtile-detail')
+        const link = $(detail).find("a[itemprop='url']").attr('href')
+        const title = $(detail).find("span[itemprop='name']").text()
+        const price = $(detail).find("span[itemprop='price']").text().replace(' ', '');
+        const prev_price =$(detail).find("span.itemtile-price-strikethrough").text().replace(' ', '');
+        const img_url = $(products).find("img").attr('src')
+        const label = $(detail).find("span.itemtile-price-bold").text()
+        result.push({title, price, prev_price, link, img_url, label, website:"ebay"})
+    })
+     console.log("finished scraped ebay deal page")
+    return result
+}
 
-module.exports = {getEbayProducts, getEbayComments}
+
+module.exports = {getEbayProducts, getEbayComments, getEbayDeals}

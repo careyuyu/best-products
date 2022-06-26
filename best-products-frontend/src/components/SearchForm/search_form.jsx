@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {TextField, Button} from '@mui/material'
 import './style.css'
+import DealCarousel from '../DealCarousel/deal_carousel'
 
 class SearchForm extends Component {
     constructor(props) {
@@ -20,6 +21,9 @@ class SearchForm extends Component {
                         <TextField label="Product Name" variant="outlined" type="input" className="mx-3" id="product_keyword" sx={{width:"80%"}} 
                         value={this.state.search_keyword} onChange={(event)=>this.setState({search_keyword: event.target.value})}></TextField>
                         <Button type="submit" size="" className="btn" variant="contained">Search</Button>
+                    </div>
+                    <div className="d-flex flex-row">
+                        <DealCarousel></DealCarousel>
                     </div>
                 </form>
             </div>

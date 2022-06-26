@@ -12,10 +12,15 @@ async function getDeals() {
     if (result) {
         return JSON.parse(result);
     }
-    else {
-        result = await AmazonParser.getAmazonDeals();
-        return result;
-    }
+    return [];
+}
+
+async function updateDeals() {
+    console.log("updating top deals")
+    Promise.all([EbayParser.getEbayDeals(), AmazonParser.getAmazonDeals()]).then((values)=>{
+        result = values.flat()
+        redis_client.SET("todays_deal", JSON.stringify(result))
+    })
 }
 
 //get the product search result page data
@@ -78,4 +83,4 @@ async function getEbayComments(url) {
     catch (e) {return []}
 }
 
-module.exports = {getAmazonProducts, getAmazonComments, getEbayProducts, getEbayComments, getDeals}
+module.exports = {getAmazonProducts, getAmazonComments, getEbayProducts, getEbayComments, getDeals, updateDeals}

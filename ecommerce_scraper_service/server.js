@@ -2,6 +2,7 @@ var express = require('express');
 var cors = require('cors');
 var app = express();
 app.use(cors())
+const schedule = require('node-schedule');
 const product_service = require('./services/product-service')
 
 
@@ -48,4 +49,14 @@ app.get("/test_deal", async function(req, res) {
     result = await product_service.getDeals()
     res.send(result)
 });
-app.listen(port);
+
+app.listen(port, function() {
+    //schedule the job for scraping daily deals
+    let rule = new schedule.RecurrenceRule();
+    rule.minute = 37;
+    rule.second =0;
+    let job = schedule.scheduleJob(rule, () => {
+        console.log(new Date());
+        product_service.updateDeals()
+      });
+});

@@ -1,6 +1,8 @@
 var axios = require('axios');
 var cheerio = require('cheerio');
 var Item = require('../models/item')
+const fs = require('fs');
+const puppeteer = require('puppeteer')
 require('dotenv').config()
 
 const PARSE_URLS = "https://www.amazon.com/s?k="
@@ -88,22 +90,25 @@ async function getAmazonProducts(product_name) {
  * scrap "Today's Deal" page of Amazon.com
  * @return the scraped products on today's deal page
  */async function getAmazonDeals() {
-    const url = getProxyUrl("https://www.amazon.com/gp/goldbox/")
+    const url = "https://www.amazon.com/gp/goldbox/"
     //get the detail page of the product
     var result = []
-    await axios.get(url).then((res)=>{
-        let $ = cheerio.load(res.data);
-        var products = $("div[aria-label='Deals grid']")
-        console.log(products)
-        // products.each((i,element)=>{
-        //     console.log(i)
-        //     const title = $(element).find("div.DealContent-module__truncate_sWbxETx42ZPStTc9jwySW").text()
-        //     console.log(title)
-        // })
-    }).catch((err) => {
-        console.log(err)
-        result = []
-     })
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.goto(url);
+    await page.waitForTimeout(1000);
+    const res = await page.content();
+    const $ = cheerio.load(res);
+    var products = $("div[aria-label='Deals grid'] div div.DealGridItem-module__dealItem_2X_WLYkJ3-dM0LtXI9THcu")
+    products.each((i,element)=>{
+        const title = $(element).find("div.DealContent-module__truncate_sWbxETx42ZPStTc9jwySW").text()
+        const price = $($(element).find("span.a-price-whole")[0]).text()
+        const prev_price = $($(element).find("span.a-price-whole")[1]).text()
+        const link = $(element).find('a.a-link-normal').first().attr("href")
+        const img_url = $(element).find('img').attr('src')
+        const label = $(element).find("div.BadgeAutomatedLabel-module__badgeAutomatedLabel_2Teem9LTaUlj6gBh5R45wd").first().text()
+        result.push({title, price, prev_price, link, img_url, label, website:"Amazon"})
+    })
      console.log("finished scraped amazon deal page")
     return result
 }
