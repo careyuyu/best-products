@@ -45,10 +45,15 @@ app.get("/test_ama/:url", async function(req, res) {
     res.send(result)
 });
 
-app.get("/test_deal", async function(req, res) {
+app.get("/get_deal", async function(req, res) {
     result = await product_service.getDeals()
     res.send(result)
 });
+
+app.get("/test_update_deal", async function(req,res) {
+    await product_service.updateDeals()
+    res.send("")
+})
 
 app.listen(port, function() {
     //schedule the job for scraping daily deals

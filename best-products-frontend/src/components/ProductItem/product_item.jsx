@@ -7,7 +7,8 @@ import './style.css'
 import CommentPopper from './comment_popper'
 import ebayPic from './images/ebay.png'
 import amazonPic from './images/amazon.png'
-import {Button} from '@mui/material';
+import {Button, Chip} from '@mui/material';
+import {Colors} from '@mui/material'
 
 class ProductItem extends Component {
     constructor(props) {
@@ -26,11 +27,14 @@ class ProductItem extends Component {
                     <div className="mb-auto p-2 bd-highlight">
                         <h5><a className="link-unstyled" href={this.props.product.link} target="_blank">{this.props.product.title}</a></h5>
                     </div>
-                    <div className="d-flex flex-row md-2 p-2">
+                    {this.renderLabels()}
+                    {(this.props.product.reviews!=0) && 
+                    <div className="d-flex flex-row mb-2 p-2">
                         <span> {(this.props.product.stars?parseFloat(this.props.product.stars.split(" ")[0]):0.0).toFixed(1)}&nbsp;</span>
                         {this.renderStars()}
                         <span> &nbsp;{this.props.product.reviews || "no"} reviews</span>
-                    </div>
+                    </div>            
+                    }
                     <div className="d-flex flex-row px-2">
                          {<CommentPopper comments={this.state.comments} getComments={this.getComments} loadingComments={this.state.loadingComments}/>}
                     </div>
@@ -112,6 +116,15 @@ class ProductItem extends Component {
                 {stars_icons}
             </div>
         )
+    }
+
+    renderLabels() {
+        if (this.props.product.label) {
+            return (
+                <div className="d-flex flex-row mb-2 p-2">
+                <Chip color="secondary" label={this.props.product.label}></Chip>
+            </div>)
+        }
     }
 
     //get the comment info of a product

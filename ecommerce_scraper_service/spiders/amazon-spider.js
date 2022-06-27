@@ -102,12 +102,25 @@ async function getAmazonProducts(product_name) {
     var products = $("div[aria-label='Deals grid'] div div.DealGridItem-module__dealItem_2X_WLYkJ3-dM0LtXI9THcu")
     products.each((i,element)=>{
         const title = $(element).find("div.DealContent-module__truncate_sWbxETx42ZPStTc9jwySW").text()
-        const price = $($(element).find("span.a-price-whole")[0]).text()
-        const prev_price = $($(element).find("span.a-price-whole")[1]).text()
+        let price = $($(element).find("span.a-price-whole")[0]).text()
+        let prev_price = $($(element).find("span.a-price-whole")[1]).text()
+        if (price!="" && price.charAt(0)!='$') {
+            price = "$"+price;
+        }
+        if (prev_price!="" && prev_price.charAt(0)!='$') {
+            prev_price = "$"+prev_price;
+        }
         const link = $(element).find('a.a-link-normal').first().attr("href")
         const img_url = $(element).find('img').attr('src')
+        //calculate the discount percentage of the product
+        let discount = ""
+        if(prev_price!="" && price!="") {
+            const prev_price_num = parseFloat(prev_price.substring(1, prev_price.length).split(',').join(''))
+            const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
+            discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";
+        }
         const label = $(element).find("div.BadgeAutomatedLabel-module__badgeAutomatedLabel_2Teem9LTaUlj6gBh5R45wd").first().text()
-        result.push({title, price, prev_price, link, img_url, label, website:"Amazon"})
+        result.push({title, price, prev_price, link, img_url, label, website:"Amazon", discount, reviews:"", stars:""})
     })
      console.log("finished scraped amazon deal page")
     return result

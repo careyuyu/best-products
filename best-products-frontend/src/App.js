@@ -3,7 +3,7 @@ import ProductList from './components/ProductList/product_list';
 import SearchForm from './components/SearchForm/search_form';
 import ReviewRadiogroup from './components/FilterComponents/ReviewRadioGroup/review_radiogroup';
 import NavBar from './components/Navbar/navbar'
-import { TextField, Checkbox, FormControlLabel } from '@mui/material';
+import { TextField, Checkbox, FormControlLabel, Chip } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import theme from './style'
@@ -38,21 +38,27 @@ class App extends Component {
             review: 0
           },
           selectedSortOption: sortOptions[0],
+          resultTitle: ""
       }
   }
   componentDidMount() {
-
+    this.getTodayDeal()
   }
   render() {
     return (
       <Fragment>
         <ThemeProvider theme={theme}>
             <NavBar></NavBar>
-            <SearchForm getSearchResult={this.getSearchResult}/>
-            {this.renderFilterDiv()}
-            <ProductList products={this.state.products_filtered} loadingData={this.state.loading_data}
-            handleSortChange={this.handleSortChange} selectedOption={this.state.selectedSortOption} 
-            sortOptions={sortOptions} product_full={this.state.products_full}/>
+            <div className='container-fluid px-0'>
+              <SearchForm getSearchResult={this.getSearchResult}/>
+              <div className='d-flex flex-row justify-content-center mt-5'>{this.renderResultTitle()}</div>
+              {this.renderFilterDiv()}
+              <div className='container mt-2' style={{"padding-left":"1000px;"}}>
+                <ProductList products={this.state.products_filtered} loadingData={this.state.loading_data}
+                  handleSortChange={this.handleSortChange} selectedOption={this.state.selectedSortOption} 
+                  sortOptions={sortOptions} product_full={this.state.products_full}/>
+              </div>
+            </div>
         </ThemeProvider>
       </Fragment>
     )
@@ -201,20 +207,52 @@ class App extends Component {
         star: 0,
         review: 0
       }
-      const selectedSortOption = sortOptions[0]
-      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption})
+      const selectedSortOption = sortOptions[0];
+      const resultTitle = "Search Results"
+      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, resultTitle})
       //this.sortResultBy("review")
     })
   }
 
-  
+  getTodayDeal=()=> {
+    this.setState({loading_data: true})
+    axios.get("http://localhost:8000/get_deal").then(res=>{
+      var products = res.data
+      //set default value for undefined attributes
+      products.sort((a,b)=>{
+        var discount_a = parseInt(a.discount.substr(0, a.discount.length-1)) || 0
+        var discount_b = parseInt(b.discount.substr(0, b.discount.length-1)) || 0
+        return (discount_a < discount_b?1:-1)
+      })
+      const filters= {
+        amazon: true,
+        ebay: true,
+        target: true,
+        sale: false,
+        min: 0,
+        max: 0,
+        star: 0,
+        review: 0
+      }
+      const selectedSortOption = sortOptions[1];
+      const resultTitle = "Today's Top Deals"
+      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, sort_by:"discount", resultTitle}).then(()=>{this.sortResultBy("discount")})
+    })
+  }
+
+  //the title for the result div
+  renderResultTitle() {
+    return (
+      <h1><span className="badge subtitle_badge py-3 neonBorder-purple neonText">{this.state.resultTitle}</span></h1>)
+  }
 
   //the filter div
   renderFilterDiv() {
     if (this.state.products_full.length > 0) {
       return (      
-        <div className="container col-1" style={{width:"200px", float:"left", "marginTop":"100px", "marginLeft":"20px"}}>
-          <h5><b>Filters</b></h5>
+        <div className="container col-1" style={{ "marginTop": "80px", width:"250px", float:"left", "marginLeft":"20px", "marginRight":"50px"}}>
+        <h4 className="neonText-purple"><b>Filters</b></h4>
+        <div className="neonBorder-purple py-3 px-3" style={{"backgroundColor":"white"}}>
           <b>From:</b>
           <div className="d-flex flex-row">
              <FormControlLabel control={<Checkbox checked={this.state.filters.amazon} onClick={()=>this.setFilter("amazon")}/>} label="Amazon" />
@@ -254,7 +292,9 @@ class App extends Component {
               value={this.state.filters.review==0?"":this.state.filters.review} 
               onChange={(e)=>this.setFilter("review", e.target.value.replace(/[^0-9]/g, '') || 0.0)}/>
           </div>
-        </div>)
+        </div>
+        </div>
+        )
     }
   }
 

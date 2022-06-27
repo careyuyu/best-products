@@ -13,15 +13,18 @@ class ProductList extends Component {
     render() {
         return (
             <Fragment>
-                <div className="container mt-5 mb-5">
+                <div className="container mt-1 mb-5">
                     <div className="d-flex justify-content-center row">
                         <div className="col-md-12" style={{"maxWidth":"1000px"}}>
                             {this.props.loadingData && 
                             <div className="mb-4">
-                                <div className="d-flex justify-content-center">Loading Data</div>
+                                <div className="d-flex justify-content-center mb-2 neonText">Loading Data</div>
                                 <LinearProgress></LinearProgress>
                             </div>}
-                            <div className="d-flex justify-content-end">
+                            <div className="d-flex justify-content-end align-items-center">
+                            <h5 className="neonText-purple mr-2">Sort by</h5>
+                            </div>
+                            <div className="d-flex justify-content-end align-items-center">
                                 {this.props.product_full.length!==0 && 
                                 <SortDropdown handleSortChange={this.props.handleSortChange} selectedOption={this.props.selectedOption} 
                                 sortOptions={this.props.sortOptions}></SortDropdown>}

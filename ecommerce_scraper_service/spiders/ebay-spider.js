@@ -102,9 +102,15 @@ async function getEbayProducts(product_name) {
         const title = $(detail).find("span[itemprop='name']").text()
         const price = $(detail).find("span[itemprop='price']").text().replace(' ', '');
         const prev_price =$(detail).find("span.itemtile-price-strikethrough").text().replace(' ', '');
-        const img_url = $(products).find("img").attr('src')
+        const img_url = $(element).find("img").attr('src')
         const label = $(detail).find("span.itemtile-price-bold").text()
-        result.push({title, price, prev_price, link, img_url, label, website:"ebay"})
+        let discount = ""
+        if(prev_price!="" && price!="") {
+            const prev_price_num = parseFloat(prev_price.substring(1, prev_price.length).split(',').join(''))
+            const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
+            discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";
+        }
+        result.push({title, price, prev_price, link, img_url, label, website:"ebay", discount, reviews:"", stars:""})
     })
      console.log("finished scraped ebay deal page")
     return result

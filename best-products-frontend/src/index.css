@@ -5,7 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color:black;
 }
 
 code {
@@ -15,20 +14,32 @@ code {
 
 
 div#root {
-  background-color:#fcecff;
-  min-height: 100vh
+  /* background-color:#1f1f1f; */
+  background-color:#fffbd5;
+  min-height: 160vh
 }
 
 .neonText {
   color: #32fae2;
   text-shadow:
     /* White glow */
-    0 0 7px rgb(85, 165, 189),
-    0 0 10px rgb(90, 161, 194),
-    0 0 21px rgb(119, 171, 204),
+    0 0 3px rgba(85, 165, 189, 0.664),
+    0 0 10px rgba(90, 161, 194, 0.575),
+    0 0 21px rgba(119, 171, 204, 0.575),
     /* Green glow */
 
-    0 0 151px #32fae2;
+    0 0 21px #32fae393;
+}
+
+.neonText-small {
+  color: #32fae2;
+  text-shadow:
+    /* Green glow */
+    0 0 3px rgba(85, 165, 189, 0.582),
+    0 0 7px rgba(90, 161, 194, 0.596),
+    0 0 7px rgba(119, 171, 204, 0.589),
+
+    0 0 21px #32fae39d;
 }
 
 .neonText-purple {
@@ -39,4 +50,40 @@ div#root {
     /* Green glow */
 
     0 0 2px #bb32fa;
+}
+
+.neonBorder-purple {
+  background-color: white;
+border-radius: 0.25rem;
+padding: 0.4em;
+box-shadow: 0 0 .02rem #fff,
+            0 0 .02rem #fff,
+
+            0 0 0.4rem #921e83,
+            0 0 0.6rem #bc13fe;
+}
+
+.light_yellow {
+  background-color: #ffffff;
+}
+
+.title_badge {
+  background-color: #01012b;
+  color: #32fae2;
+  font-size: 1.15em !important;
+  width: 480px;
+}
+
+.subtitle_badge {
+  background-color: #01012b;
+  color: #32fae2;
+  font-size: 0.7em !important;
+  width: 300px;
+}
+
+.small_badge {
+  background-color: #01012b;
+  color: #32fae2;
+  font-size: 0.6em !important;
+  width: 100%;
 }
