@@ -25,7 +25,7 @@ function getProxyUrl(request_url) {
  * @param {*} product_name is the search keyword
  * @returns a list of product data scraped from Amazon.com
  */
-async function getAmazonProducts(product_name) {
+async function getProducts(product_name) {
     console.log("amazon request start on "+product_name)
     const startTime = Date.now();
 
@@ -64,7 +64,7 @@ async function getAmazonProducts(product_name) {
  * scrap comments of a product on Amazon.com
  * @param {*} link url to the product page on Amazon
  * @return the scraped comments data of product
- */async function getAmazonComments(link) {
+ */async function getComments(link) {
     const url = getProxyUrl(link)
     //get the detail page of the product
     var result = []
@@ -89,7 +89,7 @@ async function getAmazonProducts(product_name) {
 /**
  * scrap "Today's Deal" page of Amazon.com
  * @return the scraped products on today's deal page
- */async function getAmazonDeals() {
+ */async function getDeals() {
     const url = "https://www.amazon.com/gp/goldbox/"
     //get the detail page of the product
     var result = []
@@ -119,11 +119,11 @@ async function getAmazonProducts(product_name) {
             const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
             discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";
         }
-        const label = $(element).find("div.BadgeAutomatedLabel-module__badgeAutomatedLabel_2Teem9LTaUlj6gBh5R45wd").first().text()
-        result.push({title, price, prev_price, link, img_url, label, website:"Amazon", discount, reviews:"", stars:""})
+        const labels = $(element).find("div.BadgeAutomatedLabel-module__badgeAutomatedLabel_2Teem9LTaUlj6gBh5R45wd").first().text()
+        result.push({title, price, prev_price, link, img_url, label:[labels], website:"Amazon", discount, reviews:"", stars:""})
     })
      console.log("finished scraped amazon deal page")
     return result
 }
 
-module.exports = {getAmazonProducts, getAmazonComments, getAmazonDeals}
+module.exports = {getProducts, getComments, getDeals}

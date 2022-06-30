@@ -12,10 +12,16 @@ import theme from './style'
 import axios from 'axios'
 
 
-const sortOptions = [
+const sortOptions1 = [
   { value: 'review', label: 'Reviews: highest first' },
   { value: 'discount', label: 'Discount: highest first' },
   { value: 'rating', label: 'Rating: highest first' },
+  { value: 'price_l', label: 'Price: lowest first'},
+  { value: 'price_h', label: 'Price: highest first'}
+];
+
+const sortOptions2 = [
+  { value: 'discount', label: 'Discount: highest first' },
   { value: 'price_l', label: 'Price: lowest first'},
   { value: 'price_h', label: 'Price: highest first'}
 ];
@@ -33,14 +39,15 @@ class App extends Component {
           filters: {
             amazon: true,
             ebay: true,
-            target: true,
+            walmart: true,
             sale: false,
             min: 0,
             max: 0,
             star: 0,
             review: 0
           },
-          selectedSortOption: sortOptions[0],
+          selectedSortOption: sortOptions1[0],
+          usedSortOptions: sortOptions1,
           resultTitle: "",
           cartOpen: false,
       }
@@ -63,7 +70,8 @@ class App extends Component {
               <div className='container mt-2' style={{"padding-left":"1000px;"}}>
                 <ProductList products={this.state.products_filtered} loadingData={this.state.loading_data}
                   handleSortChange={this.handleSortChange} selectedOption={this.state.selectedSortOption} 
-                  sortOptions={sortOptions} product_full={this.state.products_full} updateCartItem={this.updateCartItem}/>
+                  sortOptions={this.state.usedSortOptions} 
+                    product_full={this.state.products_full} updateCartItem={this.updateCartItem}/>
               </div>
               <Drawer anchor="right" open={this.state.cartOpen} onClose={() => this.setState({cartOpen: false})}>
                 <Cart cart_list={this.state.cart_list} updateCartItem={this.updateCartItem} removeCartItem={this.removeCartItem}/>
@@ -183,9 +191,9 @@ class App extends Component {
         return product.website != "ebay"
       })
     }
-    if (!filters.target) {
+    if (!filters.walmart) {
       products_filtered = products_filtered.filter((product)=>{
-        return product.website != "target"
+        return product.website != "walmart"
       })
     }
     if (filters.review != 0) {
@@ -242,16 +250,18 @@ class App extends Component {
       const filters= {
         amazon: true,
         ebay: true,
-        target: true,
+        walmart: true,
         sale: false,
         min: 0,
         max: 0,
         star: 0,
         review: 0
       }
-      const selectedSortOption = sortOptions[0];
+      const usedSortOptions = sortOptions1
+      const selectedSortOption = usedSortOptions[0];
+      
       const resultTitle = "Search Results"
-      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, resultTitle})
+      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, resultTitle, usedSortOptions})
       //this.sortResultBy("review")
     })
   }
@@ -270,16 +280,17 @@ class App extends Component {
       const filters= {
         amazon: true,
         ebay: true,
-        target: true,
+        walmart: true,
         sale: false,
         min: 0,
         max: 0,
         star: 0,
         review: 0
       }
-      const selectedSortOption = sortOptions[1];
+      const usedSortOptions = sortOptions2
+      const selectedSortOption = usedSortOptions[0];
       const resultTitle = "Today's Top Deals"
-      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, sort_by:"discount", resultTitle})
+      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, sort_by:"discount", resultTitle, usedSortOptions})
     })
   }
 
@@ -304,7 +315,7 @@ class App extends Component {
             <FormControlLabel control={<Checkbox checked={this.state.filters.ebay} onClick={()=>this.setFilter("ebay")}/>} label="Ebay" />
           </div>
           <div className="d-flex flex-row">
-            <FormControlLabel control={<Checkbox checked={this.state.filters.target} onClick={()=>this.setFilter("target")}/>} label="Target" />
+            <FormControlLabel control={<Checkbox checked={this.state.filters.walmart} onClick={()=>this.setFilter("walmart")}/>} label="Walmart" />
           </div>
 
           <br></br>
@@ -322,19 +333,26 @@ class App extends Component {
             <FormControlLabel control={<Checkbox checked={this.state.filters.sale} onClick={()=>this.setFilter("sale")}/>} label="On Sale" />
           </div>
 
-          <br></br>
-          <b>Customer Review:</b>
-          <div className="d-flex flex-row align-items-center mt-2">
-            <ReviewRadiogroup setFilter={this.setFilter} selectedvalue={this.state.filters.star}></ReviewRadiogroup>
-          </div>
-          <div className="d-flex flex-row align-items-center mt-2">
-            <h6>{"Reviews more than:"}</h6>
-          </div>
-          <div className="d-flex flex-row align-items-center mt-2">
-            <TextField size="small" label="Reviews" sx={{ width: '10ch'}}
-              value={this.state.filters.review==0?"":this.state.filters.review} 
-              onChange={(e)=>this.setFilter("review", e.target.value.replace(/[^0-9]/g, '') || 0.0)}/>
-          </div>
+
+          {//not rendering this part if not on result page
+            this.state.resultTitle==="Search Results" && (
+              <div>
+              <br></br>
+                <b>Customer Review:</b>
+                <div className="d-flex flex-row align-items-center mt-2">
+                  <ReviewRadiogroup setFilter={this.setFilter} selectedvalue={this.state.filters.star}></ReviewRadiogroup>
+                </div>
+                <div className="d-flex flex-row align-items-center mt-2">
+                  <h6>{"Reviews more than:"}</h6>
+                </div>
+                <div className="d-flex flex-row align-items-center mt-2">
+                  <TextField size="small" label="Reviews" sx={{ width: '10ch'}}
+                    value={this.state.filters.review==0?"":this.state.filters.review} 
+                    onChange={(e)=>this.setFilter("review", e.target.value.replace(/[^0-9]/g, '') || 0.0)}/>
+                </div>
+              </div>
+            )}
+          
         </div>
         </div>
         )

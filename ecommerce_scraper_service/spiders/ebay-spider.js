@@ -19,7 +19,7 @@ function getProxyUrl(request_url) {
  * @param {*} product_name 
  * @returns 
  */
-async function getEbayProducts(product_name) {
+async function getProducts(product_name) {
     console.log("ebay request start on "+product_name)
 
     //prepare headers for the request
@@ -60,7 +60,7 @@ async function getEbayProducts(product_name) {
  * scrap comments of a product on Amazon.com
  * @param {*} link url to the product page on Amazon
  * @return the scraped comments data of product
- */async function getEbayComments(link) {
+ */async function getComments(link) {
     const url = getProxyUrl(link)
     console.log("ebay comment start")
     //get the detail page of the product
@@ -85,7 +85,7 @@ async function getEbayProducts(product_name) {
 /**
  * scrap "Daily Deal" page of Ebay.com using puppeteer and cheerio
  * @return the scraped products on today's deal page
- */async function getEbayDeals() {
+ */async function getDeals() {
     const url = "https://www.ebay.com/deals"
     //get the detail page of the product
     var result = []
@@ -103,18 +103,18 @@ async function getEbayProducts(product_name) {
         const price = $(detail).find("span[itemprop='price']").text().replace(' ', '');
         const prev_price =$(detail).find("span.itemtile-price-strikethrough").text().replace(' ', '');
         const img_url = $(element).find("img").attr('src')
-        const label = $(detail).find("span.itemtile-price-bold").text()
+        const labels = $(detail).find("span.itemtile-price-bold").text()
         let discount = ""
         if(prev_price!="" && price!="") {
             const prev_price_num = parseFloat(prev_price.substring(1, prev_price.length).split(',').join(''))
             const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
             discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";
         }
-        result.push({title, price, prev_price, link, img_url, label, website:"ebay", discount, reviews:"", stars:""})
+        result.push({title, price, prev_price, link, img_url, labels:[labels], website:"ebay", discount, reviews:"", stars:""})
     })
      console.log("finished scraped ebay deal page")
     return result
 }
 
 
-module.exports = {getEbayProducts, getEbayComments, getEbayDeals}
+module.exports = {getProducts, getComments, getDeals}

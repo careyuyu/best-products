@@ -55,7 +55,7 @@ const CartCard = (props) => {
     }
 
     return (
-        <div className="row p-2 mt-2 cart-card item_card_border">
+        <div className="row p-2 mt-2 cart-card">
             <div className="col-md-4 mt-1 px-0"><img className="rounded product_img" src={product.img_url} alt="not available"></img></div>
                 <div className="col-md-8 mt-1 d-flex align-items-start flex-column mb-1 px-0">
                     <div className="mb-auto py-0 title-section px-1">

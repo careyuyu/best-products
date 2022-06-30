@@ -7,6 +7,7 @@ import './style.css'
 import CommentPopper from './comment_popper'
 import ebayPic from './images/ebay.png'
 import amazonPic from './images/amazon.png'
+import walmartPic from './images/walmart.png'
 import {Button, Chip} from '@mui/material';
 import {Colors} from '@mui/material'
 
@@ -41,14 +42,14 @@ class ProductItem extends Component {
     render() {
         return(
             <div className="row p-2 mt-4 item_container item_card_border">
-                <div className="col-md-3 mt-1"><img className="rounded product_img" src={this.props.product.img_url} alt="not available"></img></div>
-                <div className="col-md-6 mt-1 d-flex align-items-start flex-column bd-highlight mb-3">
+                <div className="col-md-3 mt-1"><img className="rounded product_img" src={this.props.product.img_url} alt="not available" loading="lazy"></img></div>
+                <div className="col-md-6 mt-1 d-flex align-items-start flex-column bd-highlight mb-1">
                     <div className="mb-auto p-2 bd-highlight">
                         <h5><a className="link-unstyled" href={this.props.product.link} target="_blank">{this.props.product.title}</a></h5>
                     </div>
                     {this.renderLabels()}
                     {(this.props.product.reviews!=0) && 
-                    <div className="d-flex flex-row mb-2 p-2">
+                    <div className="d-flex flex-row mb-2 p-2 py-0">
                         <span> {(this.props.product.stars?parseFloat(this.props.product.stars.split(" ")[0]):0.0).toFixed(1)}&nbsp;</span>
                         {this.renderStars()}
                         <span> &nbsp;{this.props.product.reviews || "no"} reviews</span>
@@ -108,6 +109,9 @@ class ProductItem extends Component {
         else if (this.props.product.website==="Amazon") {
             return (<img className="website_img" src={amazonPic} alt="unknown"></img>)
         }
+        else if (this.props.product.website==="walmart") {
+            return (<img className="website_img" src={walmartPic} alt="unknown"></img>)
+        }
         else {
             return (this.props.product.website)
         }
@@ -138,10 +142,14 @@ class ProductItem extends Component {
     }
 
     renderLabels() {
-        if (this.props.product.label) {
+        if (this.props.product.labels) {
+            var labelsChips = [];
+            for (var i = 0; i < this.props.product.labels.length; i++) {
+                labelsChips.push(<Chip color="secondary" key={i} label={this.props.product.labels[i]} sx={{"marginRight":"1px"}}></Chip>)
+            }
             return (
-                <div className="d-flex flex-row mb-2 p-2">
-                <Chip color="secondary" label={this.props.product.label}></Chip>
+                <div className="d-flex flex-row mb-1 pb-0">
+                    {labelsChips}
             </div>)
         }
     }

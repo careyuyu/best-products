@@ -14,9 +14,10 @@ app.get("/product_search/:product_name", async function(req, res) {
     console.log("got product_search request on: "+req.params["product_name"])
     const productName = req.params["product_name"].toLowerCase()
     Promise.all([product_service.getAmazonProducts(productName), 
-                product_service.getEbayProducts(productName)]).then((values)=>{
+                product_service.getEbayProducts(productName),
+                product_service.getWalmartProducts(productName)]).then((values)=>{
                     res.send(values.flat());
-    });
+    }).catch((err)=>{res.send([])});
 });
 
 //controller for getting comments
@@ -35,6 +36,11 @@ app.get("/comment_search/:website/:page_url", async function(req, res) {
 });
 
 //routes for testing
+app.get("/test_walmart/:url", async function(req, res) {
+    result = await product_service.getWalmartProducts(req.params["url"])
+    res.send(result)
+});
+
 app.get("/test_ebay/:url", async function(req, res) {
     result = await product_service.getEbayProducts(req.params["url"])
     res.send(result)
@@ -54,6 +60,8 @@ app.get("/test_update_deal", async function(req,res) {
     await product_service.updateDeals()
     res.send("")
 })
+
+
 
 app.listen(port, function() {
     //schedule the job for scraping daily deals

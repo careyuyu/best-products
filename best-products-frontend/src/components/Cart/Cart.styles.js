@@ -4,6 +4,7 @@ import styled from "styled-components";
 export const Wrapper = styled.aside`
   width: 450px;
   padding: 20px;
+  background: #fffbd5;
 
   .product_img {
     float: left;
@@ -19,6 +20,9 @@ export const Wrapper = styled.aside`
 
   .cart-card {
     height: 125px;
+    border-radius: 0.25rem;
+    border: 1px solid pink;
+    background-color: white
   }
 
   .cart-title {
