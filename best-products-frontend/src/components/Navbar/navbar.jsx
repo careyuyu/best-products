@@ -10,10 +10,10 @@ import './style.css'
 class NavBar extends Component {
     render() {
         return (
-            <Box className="neon_header">
+            <Box>
               <AppBar position="static" color="primary">
                 <Toolbar>
-                  <Typography variant="h6" component="div" sx={{ flexGrow: 1, color:"#32fae2"}} className="neonText">
+                  <Typography variant="h6" component="div" sx={{ flexGrow: 1, color:"white"}} className="neonText">
                     <b>Compare-&-Buy</b>
                   </Typography>
                   <a href="https://github.com/careyuyu/best-products" target='_blank' style={{"color": "inherit", "textDecoration": "inherit"}}><i className="bi bi-github fa-2x"></i></a>

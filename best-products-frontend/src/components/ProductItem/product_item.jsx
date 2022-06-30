@@ -19,6 +19,25 @@ class ProductItem extends Component {
             loadingComments : false
         }
     }
+    
+        
+
+    handleAddCart() {
+        String.prototype.hashCode = function(){
+            var hash = 0;
+            if (this.length == 0) return hash;
+            for (let i = 0; i < this.length; i++) {
+                let char = this.charCodeAt(i);
+                hash = ((hash<<5)-hash)+char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash;
+        }
+        const product = this.props.product;
+        const product_id = product.title.hashCode()
+        this.props.updateCartItem(product_id, product)
+    }
+
     render() {
         return(
             <div className="row p-2 mt-4 item_container item_card_border">
@@ -51,7 +70,7 @@ class ProductItem extends Component {
                     <div className="d-flex flex-column mt-auto fixed-bottom position-absolute bottom-0 px-3"
                     style={{zIndex:0}}>
                         <a href={this.props.product.link} target="_blank" className='link-unstyled'><Button variant="contained" className="" type="button" sx={{width:"100%"}}>Details</Button></a>
-                        <Button variant="contained" sx={{marginTop:"3px"}} type="button">Add to wishlist</Button>
+                        <Button variant="contained" sx={{marginTop:"3px"}} type="button" onClick={()=>this.handleAddCart()}>Add to cart</Button>
 
                         <div className="d-flex flex-row mb-0">
                             <p className="m-0">From:{this.renderWebsite()}</p>

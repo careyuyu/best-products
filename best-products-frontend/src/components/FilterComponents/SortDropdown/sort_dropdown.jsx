@@ -3,11 +3,16 @@ import Select from 'react-select';
 import './style.css'
 
 const customStyles = {
-    menu: (provided, state) => ({
+    option: (provided, state) => ({
       ...provided,
       width: state.selectProps.width,
-      borderBottom: '1px dotted pink',
-      color: state.isFocused ? 'purple' : 'black'
+      border: 'red',
+    }),
+    menu: (provided, state) => ({
+        ...provided,
+        width: state.selectProps.width,
+        borderBottom: '1px dotted pink',
+        color: 'pink',
     }),
   
   }
@@ -18,7 +23,7 @@ class SortDropdown extends Component {
     }
     render() {
         return (
-            <Select menuColor='red' styles={customStyles} className="dropdown_menu"
+            <Select styles={customStyles} className="dropdown_menu neonBorder-purple p-0"
                 value={this.props.selectedOption}
                 onChange={this.props.handleSortChange}
                 options={this.props.sortOptions}>

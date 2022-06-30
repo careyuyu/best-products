@@ -20,15 +20,14 @@ div#root {
 }
 
 .neonText {
-  color: #32fae2;
   text-shadow:
     /* White glow */
-    0 0 3px rgba(85, 165, 189, 0.664),
-    0 0 10px rgba(90, 161, 194, 0.575),
-    0 0 21px rgba(119, 171, 204, 0.575),
+    0 0 3px rgba(132, 207, 230, 0.664),
+    0 0 7px rgba(146, 188, 207, 0.575),
+    0 0 10px rgba(153, 200, 230, 0.575),
     /* Green glow */
 
-    0 0 21px #32fae393;
+    0 0 15px #32fae34b;
 }
 
 .neonText-small {

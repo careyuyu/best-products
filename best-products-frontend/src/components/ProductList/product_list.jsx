@@ -31,7 +31,7 @@ class ProductList extends Component {
                             <br/>
                             </div>
                                 {this.props.products.map((value, index)=>(
-                                    <ProductItem key={value.title+index} product={value}></ProductItem>
+                                    <ProductItem key={value.title+index} product={value} updateCartItem={this.props.updateCartItem}></ProductItem>
                                 )
                                 )}
                             <br/><br/><br/><br/><br/>

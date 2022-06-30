@@ -24,14 +24,14 @@ class SearchForm extends Component {
                     <div className="d-flex flex-row align-items-center justify-content-center">
                         <h4>
                             <span className="badge small_badge py-2 neonBorder-purple neonText mb-2 px-3">
-                                Search & compare products on top e-commerce sites
+                                Search & compare products on top e-commerce sites | Browse daily top deals
                             </span>
                         </h4>
                     </div>
                     <div className="form-group d-flex flex-row searchInputRow justify-content-center mt-3">
-                        <TextField label="Product Name" variant="outlined" type="input" className="mx-3" id="product_keyword" sx={{width:"80%"}} 
+                        <TextField label="Product Name" variant="outlined" type="input" className="mx-3" id="product_keyword" sx={{width:"700px"}} 
                         value={this.state.search_keyword} onChange={(event)=>this.setState({search_keyword: event.target.value})}></TextField>
-                        <Button type="submit" size="" className="btn" variant="contained">Search</Button>
+                        <Button type="submit" size="" className="btn float-left" variant="contained">Search</Button>
                     </div>
                 </form>
             </div>

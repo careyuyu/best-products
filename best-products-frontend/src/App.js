@@ -3,7 +3,8 @@ import ProductList from './components/ProductList/product_list';
 import SearchForm from './components/SearchForm/search_form';
 import ReviewRadiogroup from './components/FilterComponents/ReviewRadioGroup/review_radiogroup';
 import NavBar from './components/Navbar/navbar'
-import { TextField, Checkbox, FormControlLabel, Chip } from '@mui/material';
+import Cart from './components/Cart/Cart'
+import { TextField, Checkbox, FormControlLabel, Drawer, Fab} from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import theme from './style'
@@ -25,6 +26,8 @@ class App extends Component {
       this.state = {
           products_full: [],
           products_filtered:[],
+          cart_item: Map,
+          cart_list: [],
           loading_data: false,
           sort_by: "review",
           filters: {
@@ -38,11 +41,15 @@ class App extends Component {
             review: 0
           },
           selectedSortOption: sortOptions[0],
-          resultTitle: ""
+          resultTitle: "",
+          cartOpen: false,
       }
   }
   componentDidMount() {
+    //load today's deal data
     this.getTodayDeal()
+    //load cart item
+    this.getCartItem()
   }
   render() {
     return (
@@ -56,12 +63,47 @@ class App extends Component {
               <div className='container mt-2' style={{"padding-left":"1000px;"}}>
                 <ProductList products={this.state.products_filtered} loadingData={this.state.loading_data}
                   handleSortChange={this.handleSortChange} selectedOption={this.state.selectedSortOption} 
-                  sortOptions={sortOptions} product_full={this.state.products_full}/>
+                  sortOptions={sortOptions} product_full={this.state.products_full} updateCartItem={this.updateCartItem}/>
               </div>
+              <Drawer anchor="right" open={this.state.cartOpen} onClose={() => this.setState({cartOpen: false})}>
+                <Cart cart_list={this.state.cart_list} updateCartItem={this.updateCartItem} removeCartItem={this.removeCartItem}/>
+              </Drawer>
+              <Fab variant="extended" style={{"position":"fixed", bottom: "25px", "right":"25px"}} onClick={()=>this.setState({cartOpen:true})}>
+                <i className="bi bi-cart"></i>Shopping Cart
+              </Fab>
             </div>
         </ThemeProvider>
       </Fragment>
     )
+  }
+
+  //get cart items from localStorage
+  getCartItem=()=> {
+    const cart_item = new Map()
+    for (var key in localStorage){
+      const product = localStorage.getItem(key)
+      if (product) {
+        cart_item.set(key, product)
+      }
+   }
+   const cart_list = Array.from(cart_item)
+   this.setState({cart_item, cart_list})
+  }
+
+  updateCartItem=(key, value) => {
+    localStorage.setItem(key, JSON.stringify(value))
+    const cart_item = this.state.cart_item
+    cart_item.set(key, JSON.stringify(value))
+    const cart_list = Array.from(cart_item)
+    this.setState({cart_item, cart_list})
+  }
+
+  removeCartItem=(key) => {
+    localStorage.removeItem(key)
+    const cart_item = this.state.cart_item
+    cart_item.delete(key)
+    const cart_list = Array.from(cart_item)
+    this.setState({cart_item, cart_list})
   }
 
   //sort the product list based on category
@@ -214,6 +256,7 @@ class App extends Component {
     })
   }
 
+  //retrive today's deal data from backend api
   getTodayDeal=()=> {
     this.setState({loading_data: true})
     axios.get("http://localhost:8000/get_deal").then(res=>{
@@ -236,7 +279,7 @@ class App extends Component {
       }
       const selectedSortOption = sortOptions[1];
       const resultTitle = "Today's Top Deals"
-      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, sort_by:"discount", resultTitle}).then(()=>{this.sortResultBy("discount")})
+      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, sort_by:"discount", resultTitle})
     })
   }
 
@@ -246,12 +289,12 @@ class App extends Component {
       <h1><span className="badge subtitle_badge py-3 neonBorder-purple neonText">{this.state.resultTitle}</span></h1>)
   }
 
-  //the filter div
+  //********the filter div***********
   renderFilterDiv() {
     if (this.state.products_full.length > 0) {
       return (      
         <div className="container col-1" style={{ "marginTop": "80px", width:"250px", float:"left", "marginLeft":"20px", "marginRight":"50px"}}>
-        <h4 className="neonText-purple"><b>Filters</b></h4>
+        <h4 className="neonText-purple">Filters</h4>
         <div className="neonBorder-purple py-3 px-3" style={{"backgroundColor":"white"}}>
           <b>From:</b>
           <div className="d-flex flex-row">
