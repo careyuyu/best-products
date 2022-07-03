@@ -2,20 +2,12 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import './style.css'
 
-const customStyles = {
-    option: (provided, state) => ({
-      ...provided,
-      width: state.selectProps.width,
-      border: 'red',
-    }),
-    menu: (provided, state) => ({
-        ...provided,
-        width: state.selectProps.width,
-        borderBottom: '1px dotted pink',
-        color: 'pink',
-    }),
-  
+const theme = {
+    colors: {
+      primary: 'hotpink'
+    }
   }
+
 
 class SortDropdown extends Component {
     constructor(props) {
@@ -23,7 +15,17 @@ class SortDropdown extends Component {
     }
     render() {
         return (
-            <Select styles={customStyles} className="dropdown_menu neonBorder-purple p-0"
+            <Select theme={(theme) => ({
+                ...theme,
+                borderRadius: 0,
+                colors: {
+                  ...theme.colors,
+                  primary25: 'rgb(177, 85, 189)',
+                  primary: '#01012b',
+                },
+              })} 
+              className="dropdown_menu neonBorder-purple p-0"
+            
                 value={this.props.selectedOption}
                 onChange={this.props.handleSortChange}
                 options={this.props.sortOptions}>

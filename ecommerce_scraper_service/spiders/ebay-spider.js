@@ -31,18 +31,22 @@ async function getProducts(product_name) {
         let $ = cheerio.load(res.data);
         var items = $('div.srp-river-results.clearfix ul li.s-item.s-item__pl-on-bottom')
         items.each((i, element)=>{
-            const title = $(element).find('h3.s-item__title').text()
-            const price = $(element).find('span.s-item__price').first().text()
-            const prev_price = $(element).find('span.s-item__trending-price span.STRIKETHROUGH').text()
-            const discount = $(element).find('span.s-item__discount').text().split(" ")[0]
+            const title = $(element).find('h3.s-item__title').text() || ""
+            const price = $(element).find('span.s-item__price').first().text() || ""
+            const prev_price = $(element).find('span.s-item__trending-price span.STRIKETHROUGH').text() || ""
+            const discount = $(element).find('span.s-item__discount').text().split(" ")[0] || ""
             var stars = $($(element).find('span.clipped')[1]).text()
             stars = stars.charAt(stars.length-1)=='.'?stars:null
-            const reviews = $(element).find('span.s-item__reviews-count').children().first().text().split(" ")[0]
-            const link = $(element).find('a.s-item__link').attr('href')
+            const reviews = $(element).find('span.s-item__reviews-count').children().first().text().split(" ")[0] || ""
+            const link = $(element).find('a.s-item__link').attr('href') || ""
             const img_url = $(element).find('img.s-item__image-img').attr('src')
-
+            let labels = []
+            const label1 = $(element).find("span.BOLD.NEGATIVE").text()
+            if (label1 && label1!=="") {
+                labels.push(label1)
+            }
             //console.log(title)
-            result.push({title, price, stars, reviews, link, img_url, prev_price, discount, "website":"ebay"})
+            result.push({title, price, stars, reviews, link, img_url, prev_price, discount, "website":"ebay", labels})
         })
     }).catch((err)=>{
         console.log(err)
@@ -69,10 +73,10 @@ async function getProducts(product_name) {
         let $ = cheerio.load(res.data);
         var reviews = $('div.reviews div.ebay-review-section')
         reviews.each((i,element)=>{
-            const title = $(element).find("p.review-item-title").text().replace(/[\r\n]/gm, '')
-            const detail = $(element).find("p.review-item-content").text().replace(/[\r\n]/gm, '')
-            const stars = $(element).find("div.ebay-star-rating").attr("aria-label")
-            const author = $(element).find("a.review-item-author").text()
+            const title = $(element).find("p.review-item-title").text().replace(/[\r\n]/gm, '') || ""
+            const detail = $(element).find("p.review-item-content").text().replace(/[\r\n]/gm, '') || ""
+            const stars = $(element).find("div.ebay-star-rating").attr("aria-label") || ""
+            const author = $(element).find("a.review-item-author").text() || ""
             result.push({title, detail, stars, author})
         })
     }).catch((err)=>{

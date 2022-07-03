@@ -59,6 +59,13 @@ class CommentPopper extends React.Component {
                             <CircularProgress></CircularProgress>
                         </div>
                     </div>}
+                    {this.props.comments.length===0 &&
+                        <div className="mb-4 loading_window d-flex align-items-center justify-content-center">
+                        <div className="d-flex justify-content-center">
+                            No review available for this product.
+                        </div>
+                    </div>
+                    }
                     {this.props.comments.map((comment, index)=>(
                         <div key={comment.title+index} className="card">
                             <div className="card-body popper_window_card overflow-auto my-2 py-0">

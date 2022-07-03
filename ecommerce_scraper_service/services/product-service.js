@@ -93,13 +93,34 @@ async function getAmazonComments(page_url) {
 }
 
 
-async function getEbayComments(url) {
-    result = await EbayParser.getComments(url)
-    result = JSON.stringify(result)
-    try{return JSON.parse(result)} 
-    catch (e) {return []}
+async function getEbayComments(page_url) {
+    result = await redis_client.HGET("Ebay_Comments", page_url)
+    if (result) {
+        return result;
+    }
+    else {
+        result = await EbayParser.getComments(page_url)
+        result = JSON.stringify(result)
+        redis_client.HSET("Ebay_Comments", page_url, result)
+        try{return JSON.parse(result)} 
+        catch (e) {return []}
+    }
+}
+
+async function getWalmartComments(page_url) {
+    result = await redis_client.HGET("Walmart_Comments", page_url)
+    if (result) {
+        return result;
+    }
+    else {
+        result = await WalmartParser.getComments(page_url)
+        result = JSON.stringify(result)
+        redis_client.HSET("Walmart_Comments", page_url, result)
+        try{return JSON.parse(result)} 
+        catch (e) {return []}
+    }
 }
 
 
 
-module.exports = {getAmazonProducts, getAmazonComments, getEbayProducts, getEbayComments, getDeals, updateDeals, getWalmartProducts}
+module.exports = {getAmazonProducts, getAmazonComments, getEbayProducts, getEbayComments, getDeals, updateDeals, getWalmartProducts, getWalmartComments}

@@ -32,6 +32,9 @@ app.get("/comment_search/:website/:page_url", async function(req, res) {
     else if(website==="ebay") {
         result = await product_service.getEbayComments(url)
     }
+    else if(website==="walmart") {
+        result = await product_service.getWalmartComments(url)
+    }
     res.send(result)
 });
 
@@ -66,7 +69,8 @@ app.get("/test_update_deal", async function(req,res) {
 app.listen(port, function() {
     //schedule the job for scraping daily deals
     let rule = new schedule.RecurrenceRule();
-    rule.minute = 37;
+    rule.hour = 10;
+    rule.minute = 0;
     rule.second =0;
     let job = schedule.scheduleJob(rule, () => {
         console.log(new Date());

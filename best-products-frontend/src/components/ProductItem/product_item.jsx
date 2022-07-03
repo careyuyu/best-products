@@ -17,7 +17,8 @@ class ProductItem extends Component {
         this.state = {
             star:0.0,
             comments: [],
-            loadingComments : false
+            loadingComments : false,
+            finishedLoading : false
         }
     }
     
@@ -145,6 +146,7 @@ class ProductItem extends Component {
         if (this.props.product.labels) {
             var labelsChips = [];
             for (var i = 0; i < this.props.product.labels.length; i++) {
+                if (this.props.product.labels[i] !== "")
                 labelsChips.push(<Chip color="secondary" key={i} label={this.props.product.labels[i]} sx={{"marginRight":"1px"}}></Chip>)
             }
             return (
@@ -156,12 +158,12 @@ class ProductItem extends Component {
 
     //get the comment info of a product
     getComments =()=> {
-        if (this.state.comments.length===0 && !this.state.loadingComments) {
+        if (!this.state.finishedLoading && this.state.comments.length===0 && !this.state.loadingComments) {
             this.setState({loadingComments:true})
             const url = encodeURIComponent(this.props.product.link)
             axios.get("http://localhost:8000/comment_search/"+this.props.product.website+"/"+url).then(res=>{
                 const comments = res.data
-                this.setState({comments, loadingComments:false})
+                this.setState({comments, loadingComments:false, finishedLoading:true})
             })
         }
     }

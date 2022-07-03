@@ -181,50 +181,73 @@ class App extends Component {
   applyFilter() {
     const filters = this.state.filters
     var products_filtered = this.state.products_full
-    if (!filters.amazon) {
-      products_filtered = products_filtered.filter((product)=>{
-        return product.website != "Amazon"
-      })
-    }
-    if(!filters.ebay) {
-      products_filtered = products_filtered.filter((product)=>{
-        return product.website != "ebay"
-      })
-    }
-    if (!filters.walmart) {
-      products_filtered = products_filtered.filter((product)=>{
-        return product.website != "walmart"
-      })
-    }
-    if (filters.review != 0) {
-      products_filtered = products_filtered.filter((product)=>{
+    products_filtered = products_filtered.filter((product)=>{
+      if (!filters.amazon && product.website === "Amazon") {return false}
+      if (!filters.ebay && product.website === "ebay") {return false}
+      if (!filters.walmart && product.website === "walmart") {return false}
+      if (filters.review != 0) {
         const review = product.reviews?parseInt(product.reviews.split(",").join('')):0.0
-        return review >= filters.review
-      })
-    }
-    if (filters.sale) {
-      products_filtered = products_filtered.filter((product)=>{
-        return product.prev_price != "" || null
-      })
-    }
-    if (filters.min != 0) {
-      products_filtered = products_filtered.filter((product)=>{
-        const price = parseFloat(product.price.substring(1, product.price.length).split(',').join('')) || parseFloat(product.prev_price.substring(product, product.prev_price.length).split(',').join(''))
-        return price >= filters.min
-      })
-    }
-    if (filters.max != 0) {
-      products_filtered = products_filtered.filter((product)=>{
-        const price = parseFloat(product.price.substring(1, product.price.length).split(',').join('')) || parseFloat(product.prev_price.substring(product, product.prev_price.length).split(',').join(''))
-        return price <= filters.max
-      })
-    }
-    if (filters.star != 0) {
-      products_filtered = products_filtered.filter((product)=>{
+        if (review < filters.review) {return false}
+      }
+      if (filters.sale && (product.prev_price === "" || product.prev_price === null)) {return false}
+      let price = ""
+      try {price = parseFloat(product.price.substring(1, product.price.length).split(',').join('')) || parseFloat(product.prev_price.substring(product, product.prev_price.length).split(',').join(''))
+    }catch(e){}
+      if (filters.min != 0) {
+          if (price < filters.min) {return false;}
+      }
+      if (filters.max != 0) {
+        if (price > filters.max) {return false;}
+      }
+      if (filters.star != 0) {
         const star = product.stars?parseFloat(product.stars.split(" ")[0]):0.0
-        return star >= filters.star
-      })
-    }
+        if (star < filters.star) {return false}
+      }
+      return true;
+    })
+    // if (!filters.amazon) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     return product.website != "Amazon"
+    //   })
+    // }
+    // if(!filters.ebay) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     return product.website != "ebay"
+    //   })
+    // }
+    // if (!filters.walmart) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     return product.website != "walmart"
+    //   })
+    // }
+    // if (filters.review != 0) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     const review = product.reviews?parseInt(product.reviews.split(",").join('')):0.0
+    //     return review >= filters.review
+    //   })
+    // }
+    // if (filters.sale) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     return product.prev_price != "" || null
+    //   })
+    // }
+    // if (filters.min != 0) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     const price = parseFloat(product.price.substring(1, product.price.length).split(',').join('')) || parseFloat(product.prev_price.substring(product, product.prev_price.length).split(',').join(''))
+    //     return price >= filters.min
+    //   })
+    // }
+    // if (filters.max != 0) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     const price = parseFloat(product.price.substring(1, product.price.length).split(',').join('')) || parseFloat(product.prev_price.substring(product, product.prev_price.length).split(',').join(''))
+    //     return price <= filters.max
+    //   })
+    // }
+    // if (filters.star != 0) {
+    //   products_filtered = products_filtered.filter((product)=>{
+    //     const star = product.stars?parseFloat(product.stars.split(" ")[0]):0.0
+    //     return star >= filters.star
+    //   }
 
 
     //sort the filtered result to be consistent with prev setting
@@ -261,7 +284,7 @@ class App extends Component {
       const selectedSortOption = usedSortOptions[0];
       
       const resultTitle = "Search Results"
-      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, resultTitle, usedSortOptions})
+      this.setState({products_full:products, products_filtered:products, loading_data:false, filters, selectedSortOption, sort_by:"review", resultTitle, usedSortOptions})
       //this.sortResultBy("review")
     })
   }

@@ -1,8 +1,14 @@
 var axios = require('axios');
 var cheerio = require('cheerio');
 require('dotenv').config()
-const puppeteer = require('puppeteer')
+//puppeteer related
+const puppeteer = require('puppeteer-extra')
+const StealthPlugin = require('puppeteer-extra-plugin-stealth')
+puppeteer.use(StealthPlugin());
+puppeteer.use(require('puppeteer-extra-plugin-anonymize-ua')());
+//
 const utils = require('./utils')
+const fs = require('fs');
 
 const PARSE_URLS = "https://www.walmart.com/search?q="
 
@@ -14,7 +20,7 @@ const PARSE_URLS = "https://www.walmart.com/search?q="
 function getProxyUrl(request_url) {
     return "http://api.scraperapi.com?api_key="+process.env.SCRAPERAPI_KEY+"&url="+request_url+"&country_code=us"
 }
-//******************************Ebay.com Parsers***************************************//
+//******************************Walmart.com Parsers***************************************//
 /**
  * 
  * @param {*} product_name 
@@ -27,22 +33,21 @@ async function getProducts(product_name) {
     const url = getProxyUrl(PARSE_URLS+product_name)
     var result = []
 
-    //scrap ebay result page using axios
+    //scrap walmart result page using axios
     await axios.get(url).then(res => {
         const $ = cheerio.load(res.data);
         var products = $("div.mb1.ph1.pa0-xl.bb.b--near-white.w-33")
         products.each((i,element)=>{
             let link = $(element).find("a").attr('href')
             if (link && link.charAt(0) === '/') {
-                console.log(1)
                 link = "https://www.walmart.com"+link
             } 
-            const title = $(element).find("a").text()
+            const title = $(element).find("a").text() || ""
             const price_all = $(element).find("div.flex.flex-wrap.justify-start.items-center.lh-title.mb2.mb1-m span.w_Cl").text().replace("was", "").replace("current price ", "").split(" ");
-            const price = price_all[0]
-            const prev_price = price_all[1]
-            const img_url = $(element).find("img").attr('src')
-            const review_all = $(element).find("div.mt2.flex.items-center span.w_Cl").text().replace(" reviews", "").split(". ")
+            const price = price_all[0] || ""
+            const prev_price = price_all[1] || ""
+            const img_url = $(element).find("img").attr('src') || ""
+            const review_all = $(element).find("div.mt2.flex.items-center span.w_Cl").text().replace(" reviews", "").split(". ") || ""
             const stars = review_all[0] || ""
             const reviews = review_all[1] || ""
             let labels = []
@@ -73,24 +78,30 @@ async function getProducts(product_name) {
  * @param {*} link url to the product page on Amazon
  * @return the scraped comments data of product
  */async function getComments(link) {
-    const url = getProxyUrl(link)
-    console.log("ebay comment start")
+    const url = link
+    console.log("walmart comment scraping start")
     //get the detail page of the product
-    var result = []
-    await axios.get(url).then((res)=>{
-        let $ = cheerio.load(res.data);
-        var reviews = $('div.reviews div.ebay-review-section')
-        reviews.each((i,element)=>{
-            const title = $(element).find("p.review-item-title").text().replace(/[\r\n]/gm, '')
-            const detail = $(element).find("p.review-item-content").text().replace(/[\r\n]/gm, '')
-            const stars = $(element).find("div.ebay-star-rating").attr("aria-label")
-            const author = $(element).find("a.review-item-author").text()
+    let result = []
+    const browser = await puppeteer.launch({
+        headless: false,
+        args: ['--no-zygote', '--no-sandbox']
+      })
+    const page = await browser.newPage();
+    await page.goto(url);
+    await utils.autoScroll(page)
+    const res = await page.content();
+    const $ = cheerio.load(res);
+    const reviews = $('div.w_I.w_L div.w_K')
+    result = []
+    reviews.each((i, element)=>{
+            const title = $(element).find("span.b.w_Au").text().replace(/[\r\n]/gm, '') || ""
+            const detail = $(element).find("span.tl-m.db-m").text().replace(/[\r\n]/gm, '') || ""
+            const stars = $(element).find("div.flex.flex-grow-1.mb3 div span.w_Cl").text().replace(' review', '') || ""
+            const author = $(element).find("div.f6.gray.pr2").text() || ""
             result.push({title, detail, stars, author})
-        })
-    }).catch((err)=>{
-        console.log(err)
-        result = []
     })
+    page.close()
+    browser.close()
     return result
 }
 

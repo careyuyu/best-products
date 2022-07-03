@@ -1,0 +1,49 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\topse\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js add puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+
+PATH: 
+  C:\Program Files\PowerShell\7;C:\Python310\Scripts\;C:\Python310\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\SMDaiLi\bin;C:\Program Files\Java\jdk-14.0.2\bin;C:\Program Files\dotnet\;C:\Program Files\Git\cmd;C:\Program Files\PowerShell\7\;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\topse\AppData\Roaming\Python\Python310\Scripts\;C:\Program Files\PuTTY\;C:\Program Files\Go\bin;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\topse\AppData\Local\Microsoft\WindowsApps;C:\Users\topse\AppData\Local\atom\bin;C:\Users\topse\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\topse\AppData\Roaming\npm;C:\Users\topse\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\JetBrains\IntelliJ IDEA 2021.3\bin;;C:\Users\topse\OneDrive\Documents\library\apache-maven-3.8.4\bin;C:\Users\topse\AppData\Local\Microsoft\WindowsApps;C:\Users\topse\AppData\Roaming\Python\Python310\Scripts\;C:\Users\topse\go\bin;C:\Users\topse\AppData\Local\GitHubDesktop\bin;C:\Program Files\JetBrains\PyCharm Community Edition 2022.1.1\bin;
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.13.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: EBUSY: resource busy or locked, rmdir 'C:\Users\topse\OneDrive\Documents\GitHub\best-products\ecommerce_scraper_service\node_modules\puppeteer\.local-chromium\win64-1011831\chrome-win'
+
+npm manifest: 
+  {
+    "name": "best_products_spider",
+    "version": "1.0.0",
+    "description": "",
+    "main": "server.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "axios": "^0.27.2",
+      "cheerio": "^1.0.0-rc.11",
+      "cors": "^2.8.5",
+      "dotenv": "^16.0.1",
+      "express": "^4.18.1",
+      "node-schedule": "^2.1.0",
+      "pm2": "^5.2.0",
+      "puppeteer": "^15.1.1",
+      "redis": "^4.1.0",
+      "request": "^2.88.2",
+      "request-promise": "^4.2.6"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
