@@ -102,7 +102,16 @@ async function getProducts(product_name) {
     const url = "https://www.amazon.com/gp/goldbox/"
     //get the detail page of the product
     var result = []
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+        ],
+        ignoreDefaultArgs: ['--disable-extensions']
+    });
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitForTimeout(1000);

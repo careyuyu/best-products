@@ -93,7 +93,16 @@ async function getProducts(product_name) {
     const url = "https://www.ebay.com/deals"
     //get the detail page of the product
     var result = []
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+        ],
+        ignoreDefaultArgs: ['--disable-extensions']
+    });
     const page = await browser.newPage();
     await page.goto(url);
     await page.waitForTimeout(1000);
@@ -102,11 +111,11 @@ async function getProducts(product_name) {
     var products = $("div.ebayui-dne-item-featured-card.ebayui-dne-item-featured-card div.row div.col")
     products.each((i,element)=>{
         const detail = $(element).find('div.dne-itemtile-detail')
-        const link = $(detail).find("a[itemprop='url']").attr('href')
-        const title = $(detail).find("span[itemprop='name']").text()
-        const price = $(detail).find("span[itemprop='price']").text().replace(' ', '');
-        const prev_price =$(detail).find("span.itemtile-price-strikethrough").text().replace(' ', '');
-        const img_url = $(element).find("img").attr('src')
+        const link = $(detail).find("a[itemprop='url']").attr('href') || ""
+        const title = $(detail).find("span[itemprop='name']").text() || ""
+        const price = $(detail).find("span[itemprop='price']").text().replace(' ', '') || "";
+        const prev_price =$(detail).find("span.itemtile-price-strikethrough").text().replace(' ', '') || "";
+        const img_url = $(element).find("img").attr('src') || ""
         const labels = $(detail).find("span.itemtile-price-bold").text()
         let discount = ""
         if(prev_price!="" && price!="") {

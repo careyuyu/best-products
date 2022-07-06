@@ -39,20 +39,20 @@ app.get("/comment_search/:website/:page_url", async function(req, res) {
 });
 
 //routes for testing
-app.get("/test_walmart/:url", async function(req, res) {
-    result = await product_service.getWalmartProducts(req.params["url"])
-    res.send(result)
-});
+// app.get("/test_walmart/:url", async function(req, res) {
+//     result = await product_service.getWalmartProducts(req.params["url"])
+//     res.send(result)
+// });
 
-app.get("/test_ebay/:url", async function(req, res) {
-    result = await product_service.getEbayProducts(req.params["url"])
-    res.send(result)
-});
+// app.get("/test_ebay/:url", async function(req, res) {
+//     result = await product_service.getEbayProducts(req.params["url"])
+//     res.send(result)
+// });
 
-app.get("/test_ama/:url", async function(req, res) {
-    result = await product_service.getAmazonProducts(req.params["url"])
-    res.send(result)
-});
+// app.get("/test_ama/:url", async function(req, res) {
+//     result = await product_service.getAmazonProducts(req.params["url"])
+//     res.send(result)
+// });
 
 app.get("/get_deal", async function(req, res) {
     result = await product_service.getDeals()
@@ -67,6 +67,7 @@ app.get("/test_update_deal", async function(req,res) {
 
 
 app.listen(port, function() {
+    console.log("ecommerce-scraper-api listening on "+port)
     //schedule the job for scraping daily deals
     let rule = new schedule.RecurrenceRule();
     rule.hour = 10;

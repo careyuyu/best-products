@@ -56,7 +56,7 @@ async function getProducts(product_name) {
                 labels.push($(element).text())
             })
             let discount = ""
-            if(prev_price && price) {
+            if(prev_price!=="" && price!=="") {
                 const prev_price_num = parseFloat(prev_price.substring(1, prev_price.length).split(',').join(''))
                 const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
                 discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";
@@ -83,9 +83,15 @@ async function getProducts(product_name) {
     //get the detail page of the product
     let result = []
     const browser = await puppeteer.launch({
-        headless: false,
-        args: ['--no-zygote', '--no-sandbox']
-      })
+        headless: true,
+        args: [
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+        ],
+        ignoreDefaultArgs: ['--disable-extensions']
+    })
     const page = await browser.newPage();
     await page.goto(url);
     await utils.autoScroll(page)
@@ -113,21 +119,31 @@ async function getDeals() {
     const url = "https://www.walmart.com/shop/deals"
     //get the detail page of the product
     var result = []
-    const browser = await puppeteer.launch({headless:false});
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            "--disable-gpu",
+            "--disable-dev-shm-usage",
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+        ],
+        ignoreDefaultArgs: ['--disable-extensions']
+    });
     const page = await browser.newPage();
     await page.goto(url, {"waitUntil": "networkidle0"});
     await utils.autoScroll(page)
     const res = await page.content();
+    fs.writeFile('./test.html', res, err =>{})
     const $ = cheerio.load(res);
-    var products = $("div.mb1.ph1.pa0-xl.bb.b--near-white.w-33")
+    var products = $("div.mb1.ph1.pa0-xl.bb.b--near-white")
     products.each((i,element)=>{
-        const link = "https://www.walmart.com"+$(element).find("a").attr('href')
-        const title = $(element).find("a").text()
+        const link = "https://www.walmart.com"+$(element).find("a").attr('href') || ""
+        const title = $(element).find("a").text() || ""
         const price_all = $(element).find("div.flex.flex-wrap.justify-start.items-center.lh-title.mb2.mb1-m span.w_Cl").text().replace("was", "").replace("current price ", "").split(" ");
-        const price = price_all[0]
-        const prev_price = price_all[1]
-        const img_url = $(element).find("img").attr('src')
-        const review_all = $(element).find("div.mt2.flex.items-center span.w_Cl").text().replace(" reviews", "").split(". ")
+        const price = price_all[0] || ""
+        const prev_price = price_all[1] || ""
+        const img_url = $(element).find("img").attr('src') || ""
+        const review_all = $(element).find("div.mt2.flex.items-center span.w_Cl").text().replace(" reviews", "").split(". ") || ""
         const stars = review_all[0] || ""
         const reviews = review_all[1] || ""
         let labels = []
@@ -136,7 +152,7 @@ async function getDeals() {
             labels.push($(element).text())
         })
         let discount = ""
-         if(prev_price && price) {
+         if(prev_price!=="" && price!=="") {
              const prev_price_num = parseFloat(prev_price.substring(1, prev_price.length).split(',').join(''))
              const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
              discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";

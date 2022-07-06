@@ -205,50 +205,6 @@ class App extends Component {
       }
       return true;
     })
-    // if (!filters.amazon) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     return product.website != "Amazon"
-    //   })
-    // }
-    // if(!filters.ebay) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     return product.website != "ebay"
-    //   })
-    // }
-    // if (!filters.walmart) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     return product.website != "walmart"
-    //   })
-    // }
-    // if (filters.review != 0) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     const review = product.reviews?parseInt(product.reviews.split(",").join('')):0.0
-    //     return review >= filters.review
-    //   })
-    // }
-    // if (filters.sale) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     return product.prev_price != "" || null
-    //   })
-    // }
-    // if (filters.min != 0) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     const price = parseFloat(product.price.substring(1, product.price.length).split(',').join('')) || parseFloat(product.prev_price.substring(product, product.prev_price.length).split(',').join(''))
-    //     return price >= filters.min
-    //   })
-    // }
-    // if (filters.max != 0) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     const price = parseFloat(product.price.substring(1, product.price.length).split(',').join('')) || parseFloat(product.prev_price.substring(product, product.prev_price.length).split(',').join(''))
-    //     return price <= filters.max
-    //   })
-    // }
-    // if (filters.star != 0) {
-    //   products_filtered = products_filtered.filter((product)=>{
-    //     const star = product.stars?parseFloat(product.stars.split(" ")[0]):0.0
-    //     return star >= filters.star
-    //   }
-
 
     //sort the filtered result to be consistent with prev setting
     this.sortResultBy(this.state.sort_by, products_filtered)
@@ -259,7 +215,7 @@ class App extends Component {
   getSearchResult = (event, search_keyword)=> {
     event.preventDefault()
     this.setState({loading_data: true})
-    axios.get("http://localhost:8000/product_search/"+search_keyword).then(res=>{
+    axios.get(process.env.REACT_APP_BACKEND_API+"/product_search/"+search_keyword).then(res=>{
       var products = res.data
       //set default value for undefined attributes
       products.map((a)=>{
@@ -292,7 +248,7 @@ class App extends Component {
   //retrive today's deal data from backend api
   getTodayDeal=()=> {
     this.setState({loading_data: true})
-    axios.get("http://localhost:8000/get_deal").then(res=>{
+    axios.get(process.env.REACT_APP_BACKEND_API+"/get_deal").then(res=>{
       var products = res.data
       //set default value for undefined attributes
       products.sort((a,b)=>{

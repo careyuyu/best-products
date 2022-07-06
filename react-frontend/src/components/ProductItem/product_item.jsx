@@ -161,7 +161,7 @@ class ProductItem extends Component {
         if (!this.state.finishedLoading && this.state.comments.length===0 && !this.state.loadingComments) {
             this.setState({loadingComments:true})
             const url = encodeURIComponent(this.props.product.link)
-            axios.get("http://localhost:8000/comment_search/"+this.props.product.website+"/"+url).then(res=>{
+            axios.get(process.env.REACT_APP_BACKEND_API+"/comment_search/"+this.props.product.website+"/"+url).then(res=>{
                 const comments = res.data
                 this.setState({comments, loadingComments:false, finishedLoading:true})
             })

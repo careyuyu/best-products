@@ -4,7 +4,9 @@ const redis = require('redis')
 const AmazonParser = require('../spiders/amazon-spider')
 const EbayParser = require('../spiders/ebay-spider')
 const WalmartParser = require('../spiders/walmart-spider')
-const redis_client = redis.createClient({port:6379, host:'redis'})
+const redis_client = redis.createClient({
+    url: process.env.REDIS_SERVER
+})
 redis_client.connect()
 
 
@@ -18,6 +20,7 @@ async function getDeals() {
 
 async function updateDeals() {
     console.log("updating top deals")
+    // [EbayParser.getDeals(), AmazonParser.getDeals(), WalmartParser.getDeals()]
     Promise.all([EbayParser.getDeals(), AmazonParser.getDeals(), WalmartParser.getDeals()]).then((values)=>{
         result = values.flat()
         redis_client.SET("todays_deal", JSON.stringify(result))
