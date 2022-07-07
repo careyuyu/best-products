@@ -8,8 +8,9 @@ import { TextField, Checkbox, FormControlLabel, Drawer, Fab} from '@mui/material
 import { ThemeProvider } from '@mui/material/styles';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import theme from './style'
-
 import axios from 'axios'
+
+import config from './config.json'
 
 
 const sortOptions1 = [
@@ -215,7 +216,7 @@ class App extends Component {
   getSearchResult = (event, search_keyword)=> {
     event.preventDefault()
     this.setState({loading_data: true})
-    axios.get(process.env.REACT_APP_BACKEND_API+"/product_search/"+search_keyword).then(res=>{
+    axios.get(config.REACT_APP_BACKEND_API+"/product_search/"+search_keyword).then(res=>{
       var products = res.data
       //set default value for undefined attributes
       products.map((a)=>{
@@ -248,7 +249,7 @@ class App extends Component {
   //retrive today's deal data from backend api
   getTodayDeal=()=> {
     this.setState({loading_data: true})
-    axios.get(process.env.REACT_APP_BACKEND_API+"/get_deal").then(res=>{
+    axios.get(config.REACT_APP_BACKEND_API+"/get_deal").then(res=>{
       var products = res.data
       //set default value for undefined attributes
       products.sort((a,b)=>{

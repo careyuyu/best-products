@@ -103,7 +103,7 @@ async function getProducts(product_name) {
     reviews.each((i, element)=>{
             const title = $(element).find("span.b.w_Au").text().replace(/[\r\n]/gm, '') || ""
             const detail = $(element).find("span.tl-m.db-m").text().replace(/[\r\n]/gm, '') || ""
-            const stars = $(element).find("div.flex.flex-grow-1.mb3 div span.w_Cl").text().replace(' review', '') || ""
+            const stars = $(element).find("div.flex.flex-grow-1.mb3 div span").text().replace(' review', '') || ""
             const author = $(element).find("div.f6.gray.pr2").text() || ""
             result.push({title, detail, stars, author})
     })
@@ -162,7 +162,8 @@ async function getDeals() {
         result.push({title, price, prev_price, link, img_url, labels, website:"walmart", discount, reviews, stars})
     })
     console.log("finished scraped walmart deal page")
-    await browser.close()
+    page.close()
+    browser.close()
     return result
 }
 

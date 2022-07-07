@@ -10,6 +10,7 @@ import amazonPic from './images/amazon.png'
 import walmartPic from './images/walmart.png'
 import {Button, Chip} from '@mui/material';
 import {Colors} from '@mui/material'
+import config from '../../config.json'
 
 class ProductItem extends Component {
     constructor(props) {
@@ -161,7 +162,7 @@ class ProductItem extends Component {
         if (!this.state.finishedLoading && this.state.comments.length===0 && !this.state.loadingComments) {
             this.setState({loadingComments:true})
             const url = encodeURIComponent(this.props.product.link)
-            axios.get(process.env.REACT_APP_BACKEND_API+"/comment_search/"+this.props.product.website+"/"+url).then(res=>{
+            axios.get(config.REACT_APP_BACKEND_API+"/comment_search/"+this.props.product.website+"/"+url).then(res=>{
                 const comments = res.data
                 this.setState({comments, loadingComments:false, finishedLoading:true})
             })

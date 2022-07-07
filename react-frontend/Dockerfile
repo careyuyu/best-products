@@ -1,24 +1,17 @@
-# syntax=docker/dockerfile:1
-# Dockerfile for React client
-
-# Build react client
-FROM node:latest
-# set working directory
+# Build Enviroment
+FROM node:latest as build
 WORKDIR /app
-
-# add `/app/node_modules/.bin` to $PATH
 ENV PATH /app/node_modules/.bin:$PATH
-
-# install app dependencies
 COPY package.json ./
-COPY package-lock.json ./
 COPY yarn.lock ./
-RUN npm install
-RUN npm install react-scripts@3.4.1 -g
-RUN yarn install
-
-# add app
+RUN npm install react-scripts@3.4.1 -g --silent
+# build react app
 COPY . ./
+RUN yarn install
+RUN yarn build
 
-# start app
-CMD ["npm", "start"]
+# production environment
+FROM nginx:stable-alpine
+COPY --from=build /app/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
