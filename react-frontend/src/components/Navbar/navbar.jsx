@@ -16,7 +16,7 @@ class NavBar extends Component {
                   <Typography variant="h6" component="div" sx={{ flexGrow: 1, color:"white"}} className="neonText">
                     <b>Compare-&-Buy</b>
                   </Typography>
-                  <a href="https://github.com/careyuyu/best-products" target='_blank' style={{"color": "inherit", "textDecoration": "inherit"}}><i className="bi bi-github fa-2x"></i></a>
+                  <a href="https://github.com/careyuyu/compare-and-buy" target='_blank' style={{"color": "inherit", "textDecoration": "inherit"}}><i className="bi bi-github fa-2x"></i></a>
                 </Toolbar>
               </AppBar>
             </Box>

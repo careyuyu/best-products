@@ -103,6 +103,7 @@ async function getProducts(product_name) {
     //get the detail page of the product
     var result = []
     const browser = await puppeteer.launch({
+        executablePath: '/usr/bin/google-chrome',
         headless: true,
         args: [
             "--disable-gpu",

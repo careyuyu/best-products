@@ -20,7 +20,6 @@ async function getDeals() {
 
 async function updateDeals() {
     console.log("updating top deals")
-    // [EbayParser.getDeals(), AmazonParser.getDeals(), WalmartParser.getDeals()]
     Promise.all([EbayParser.getDeals(), AmazonParser.getDeals(), WalmartParser.getDeals()]).then((values)=>{
         result = values.flat()
         redis_client.SET("todays_deal", JSON.stringify(result))

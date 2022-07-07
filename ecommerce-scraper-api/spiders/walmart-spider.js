@@ -43,7 +43,7 @@ async function getProducts(product_name) {
                 link = "https://www.walmart.com"+link
             } 
             const title = $(element).find("a").text() || ""
-            const price_all = $(element).find("div.flex.flex-wrap.justify-start.items-center.lh-title.mb2.mb1-m span.w_Cl").text().replace("was", "").replace("current price ", "").split(" ");
+            const price_all = $(element).find("div.flex.flex-wrap.justify-start.items-center.lh-title.mb2.mb1-m span").text().replace("was", "").replace("current price ", "").split(" ");
             const price = price_all[0] || ""
             const prev_price = price_all[1] || ""
             const img_url = $(element).find("img").attr('src') || ""
@@ -83,6 +83,7 @@ async function getProducts(product_name) {
     //get the detail page of the product
     let result = []
     const browser = await puppeteer.launch({
+        executablePath: '/usr/bin/google-chrome',
         headless: true,
         args: [
             "--disable-gpu",
@@ -120,6 +121,7 @@ async function getDeals() {
     //get the detail page of the product
     var result = []
     const browser = await puppeteer.launch({
+        executablePath: '/usr/bin/google-chrome',
         headless: true,
         args: [
             "--disable-gpu",
@@ -139,11 +141,11 @@ async function getDeals() {
     products.each((i,element)=>{
         const link = "https://www.walmart.com"+$(element).find("a").attr('href') || ""
         const title = $(element).find("a").text() || ""
-        const price_all = $(element).find("div.flex.flex-wrap.justify-start.items-center.lh-title.mb2.mb1-m span.w_Cl").text().replace("was", "").replace("current price ", "").split(" ");
+        const price_all = $(element).find("div.flex.flex-wrap.justify-start span").text().replace("was", "").replace("current price ", "").split(" ");
         const price = price_all[0] || ""
         const prev_price = price_all[1] || ""
         const img_url = $(element).find("img").attr('src') || ""
-        const review_all = $(element).find("div.mt2.flex.items-center span.w_Cl").text().replace(" reviews", "").split(". ") || ""
+        const review_all = $(element).find("div.mt2.flex.items-center span:not([aria-hidden])").text().replace(" reviews", "").split(". ") || ""
         const stars = review_all[0] || ""
         const reviews = review_all[1] || ""
         let labels = []
