@@ -79,7 +79,7 @@ async function getProducts(product_name) {
  * @return the scraped comments data of product
  */async function getComments(link) {
     const url = link
-    console.log("walmart comment scraping start")
+    console.log("walmart comment scraping start on "+link)
     //get the detail page of the product
     let result = []
     const browser = await puppeteer.launch({

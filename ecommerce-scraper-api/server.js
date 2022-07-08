@@ -1,7 +1,10 @@
 var express = require('express');
 var cors = require('cors');
 var app = express();
+const bodyParser = require("body-parser");
 app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 const schedule = require('node-schedule');
 const product_service = require('./services/product-service')
 
@@ -21,10 +24,10 @@ app.get("/product_search/:product_name", async function(req, res) {
 });
 
 //controller for getting comments
-app.get("/comment_search/:website/:page_url", async function(req, res) {
+app.post("/comment_search/:website", async function(req, res) {
     console.log("got comment_search request on:"+req.params["page_url"])
     const website = req.params["website"]
-    const url = req.params["page_url"]
+    const url = req.body["url"]
     result = []
     if(website==="Amazon") {
         result = await product_service.getAmazonComments(url)
