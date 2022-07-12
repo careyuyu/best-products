@@ -132,36 +132,44 @@ async function getDeals() {
         ignoreDefaultArgs: ['--disable-extensions']
     });
     const page = await browser.newPage();
-    await page.goto(url, {"waitUntil": "networkidle0"});
-    await utils.autoScroll(page)
-    const res = await page.content();
-    fs.writeFile('./test.html', res, err =>{})
-    const $ = cheerio.load(res);
-    var products = $("div.mb1.ph1.pa0-xl.bb.b--near-white")
-    products.each((i,element)=>{
-        const link = "https://www.walmart.com"+$(element).find("a").attr('href') || ""
-        const title = $(element).find("a").text() || ""
-        const price_all = $(element).find("div.flex.flex-wrap.justify-start span").text().replace("was", "").replace("current price ", "").split(" ");
-        const price = price_all[0] || ""
-        const prev_price = price_all[1] || ""
-        const img_url = $(element).find("img").attr('src') || ""
-        const review_all = $(element).find("div.mt2.flex.items-center span:not([aria-hidden])").text().replace(" reviews", "").split(". ") || ""
-        const stars = review_all[0] || ""
-        const reviews = review_all[1] || ""
-        let labels = []
-        const labels_div = $(element).find("div.mt2.mb2 span")
-        labels_div.each((i, element)=>{
-            labels.push($(element).text())
-        })
-        let discount = ""
-         if(prev_price!=="" && price!=="") {
-             const prev_price_num = parseFloat(prev_price.substring(1, prev_price.length).split(',').join(''))
-             const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
-             discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";
-        }
+    try {
+        await page.goto(url);
+        await page.waitForTimeout(1000);
+        await utils.autoScroll(page)
+        const res = await page.content();
+        const $ = cheerio.load(res);
+        var products = $("div.mb1.ph1.pa0-xl.bb.b--near-white")
+        products.each((i,element)=>{
+            const link = "https://www.walmart.com"+$(element).find("a").attr('href') || ""
+            const title = $(element).find("a").text() || ""
+            const price_all = $(element).find("div.flex.flex-wrap.justify-start span").text().replace("was", "").replace("current price ", "").split(" ");
+            const price = price_all[0] || ""
+            const prev_price = price_all[1] || ""
+            const img_url = $(element).find("img").attr('src') || ""
+            const review_all = $(element).find("div.mt2.flex.items-center span:not([aria-hidden])").text().replace(" reviews", "").split(". ") || ""
+            const stars = review_all[0] || ""
+            const reviews = review_all[1] || ""
+            let labels = []
+            const labels_div = $(element).find("div.mt2.mb2 span")
+            labels_div.each((i, element)=>{
+                labels.push($(element).text())
+            })
+            let discount = ""
+            if(prev_price!=="" && price!=="") {
+                const prev_price_num = parseFloat(prev_price.substring(1, prev_price.length).split(',').join(''))
+                const current_price_num = parseFloat(price.substring(1, price.length).split(',').join(''))
+                discount = parseInt(((prev_price_num-current_price_num)/prev_price_num)*100) + "%";
+            }
         result.push({title, price, prev_price, link, img_url, labels, website:"walmart", discount, reviews, stars})
     })
     console.log("finished scraped walmart deal page")
+    } catch (e) {
+        console.log("walmart deal scraping ERROR: "+e.message);
+        page.close();
+        browser.close();
+        return [];
+    }
+    
     page.close()
     browser.close()
     return result
